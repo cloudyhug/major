@@ -1,0 +1,9 @@
+cradle:
+  stack:
+    - path: "./app/server"
+      component: "major:exe:major-server"
+    - path: "./app/client"
+      component: "major:exe:major-client"
+    - path: "./common"
+      component: "lib:major"
+

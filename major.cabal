@@ -1,0 +1,97 @@
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.33.0.
+--
+-- see: https://github.com/sol/hpack
+--
+-- hash: 7448e8614ef2cd738c669197d018590a58f56e90d074494afcf822393a2a57d4
+
+name:           major
+version:        1.0
+description:    Please see the README on GitHub at <https://github.com/cloudyhug/major#readme>
+homepage:       https://github.com/cloudyhug/major#readme
+bug-reports:    https://github.com/cloudyhug/major/issues
+author:         cloudyhug
+maintainer:     cloudyhug@protonmail.ch
+copyright:      cloudyhug
+license:        MIT
+license-file:   LICENSE
+build-type:     Simple
+extra-source-files:
+    README.md
+
+source-repository head
+  type: git
+  location: https://github.com/cloudyhug/major
+
+library
+  exposed-modules:
+      Common
+  other-modules:
+      Paths_major
+  hs-source-dirs:
+      common
+  build-depends:
+      array >=0.5.4.0
+    , base >=4.7 && <5
+    , brick >=0.52.1
+    , bytestring >=0.10.10.1
+    , containers >=0.6.2.1
+    , http-client >=0.6.4.1
+    , http-conduit >=2.3.7.3
+    , http-types >=0.12.3
+    , regex-base >=0.94.0.0
+    , regex-pcre >=0.95.0.0
+    , scotty >=0.11.6
+    , text >=1.2.4.0
+    , vty >=5.28.2
+  default-language: Haskell2010
+
+executable major-client
+  main-is: Main.hs
+  other-modules:
+      Paths_major
+  hs-source-dirs:
+      app/client
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      array >=0.5.4.0
+    , base >=4.7 && <5
+    , brick >=0.52.1
+    , bytestring >=0.10.10.1
+    , containers >=0.6.2.1
+    , http-client >=0.6.4.1
+    , http-conduit >=2.3.7.3
+    , http-types >=0.12.3
+    , major
+    , regex-base >=0.94.0.0
+    , regex-pcre >=0.95.0.0
+    , scotty >=0.11.6
+    , text >=1.2.4.0
+    , vty >=5.28.2
+  default-language: Haskell2010
+
+executable major-server
+  main-is: Main.hs
+  other-modules:
+      Major
+      Paths_major
+  hs-source-dirs:
+      app/server
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      array >=0.5.4.0
+    , base >=4.7 && <5
+    , brick >=0.52.1
+    , bytestring >=0.10.10.1
+    , containers >=0.6.2.1
+    , http-client >=0.6.4.1
+    , http-conduit >=2.3.7.3
+    , http-types >=0.12.3
+    , major
+    , regex-base >=0.94.0.0
+    , regex-pcre >=0.95.0.0
+    , scotty >=0.11.6
+    , text >=1.2.4.0
+    , vty >=5.28.2
+  default-language: Haskell2010
