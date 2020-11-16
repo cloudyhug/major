@@ -3,7 +3,7 @@
 module Main where
 
 import Common
-import Major (computeWinner)
+import Major (computeWinner, computeStatistics, exportStatistics)
 import Web.Scotty
 import Web.Scotty.Internal.Types (ActionT)
 import qualified Data.Map.Strict as M
@@ -24,7 +24,6 @@ main = do
   let port = fromMaybe (-1) $ readMaybe portStr
   when (port < 1 || port > 65535) $ fail "invalid port"
   votesRef <- newIORef $ M.fromList $ map (\c -> (c, [])) candidates
-  winnerRef <- newIORef Nothing
   scotty port $ do
     -- gives to the client the candidates list
     get "/candidates" $ do
@@ -36,11 +35,12 @@ main = do
       liftIO . modifyIORef votesRef $ flip (foldl (\v (n, r) -> M.adjust (r :) n v)) newVotes
     -- computes the results if it has not been done and gives the winner's name to the client
     get "/result" $ do
-      winner <- liftIO $ readIORef winnerRef
-      case winner of
-        Just w -> raw $ BS.pack w
-        Nothing -> do
-          w <- liftIO $ computeWinner <$> readIORef votesRef
-          liftIO $ writeIORef winnerRef (Just w)
-          raw $ BS.pack w
+      votes <- liftIO $ readIORef votesRef
+      if (sum . map length $ M.elems votes) == 0 then raw BS.empty
+      else
+        let winner = computeWinner votes in
+        raw $ BS.pack winner
+    post "/generate" . liftIO $ do
+      votes <- readIORef votesRef
+      exportStatistics (computeStatistics <$> votes) "results.png"
 

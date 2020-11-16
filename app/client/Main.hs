@@ -20,7 +20,6 @@ import Data.Function ((&))
 import qualified Data.ByteString.Internal as BSI
 import Brick.Widgets.Border (borderWithLabel)
 import Brick.Widgets.Border.Style (unicode, unicodeBold)
-import Brick.Widgets.Center (center)
 import Graphics.Vty.Attributes (defAttr, withStyle, bold)
 
 data ClientState = Command String ClientState
@@ -91,23 +90,26 @@ drawUI (AppState _ _ clientState) = [ borderWithLabel (str "Major") $ drawClient
 
 drawClientUI :: ClientState -> Widget RName
 drawClientUI (Info msg clientState) =
-  vBox [ center . padAll 2 $ drawClientUI clientState
+  vBox [ drawClientUI clientState
        , str ("[INFO] " ++ msg) ]
                                            
 drawClientUI (Command cmd clientState) =
-  vBox [ center . padAll 2 $ drawClientUI clientState
-       , str ("⏵ " ++ tail cmd) ]
+  vBox [ drawClientUI clientState
+       , str ("⏵ " ++ cmd) ]
 
 drawClientUI (Vote candidates index ratings voted) =
   withBorderStyle (if voted then unicodeBold else unicode) .
-    vBox . snd . foldr renderAccWithIndex (0, []) . zip candidates $ elems ratings
+    vBox . snd . foldr renderAccWithIndex (lastIndex, []) . zip candidates $ elems ratings
       where
+        lastIndex = length candidates - 1
+        paddingValue = maximum $ map length candidates
         render i (candidate, rating) =
+          let nbSpaces = paddingValue - length candidate in
           (if i == index then withAttr (attrName "bold") else id) $
             hBox [ str "*"
-                 , padLeftRight 3 $ str candidate
+                 , padLeftRight 3 . str $ candidate ++ replicate nbSpaces ' '
                  , padLeftRight 3 $ str (pp rating) ]
-        renderAccWithIndex item (i, widgets) = (i + 1, render i item : widgets)
+        renderAccWithIndex item (i, widgets) = (i - 1, render i item : widgets)
 
 handleEvent :: AppState -> BrickEvent CustomEvent RName -> EventM RName (Next AppState)
 -- CTRL+Q always quits the app
@@ -130,6 +132,10 @@ handleEvent appState@(AppState _ _ (Command cmd oldState)) event =
       continue $ appState { getClientState = Command (cmd ++ [c]) oldState }
     -- ENTER executes the command
     VtyEvent (EvKey KEnter []) -> execute cmd $ appState { getClientState = oldState }
+    -- BackSpace removes the last character
+    VtyEvent (EvKey KBS []) ->
+      if cmd == "/" then continue appState
+      else continue $ appState { getClientState = Command (init cmd) oldState }
     _ -> continue appState
 
 handleEvent appState@(AppState _ _ voteState@(Vote candidates index ratings _)) event =
@@ -149,11 +155,11 @@ handleEvent appState@(AppState _ _ voteState@(Vote candidates index ratings _)) 
     -- vertical arrows change the candidate selection
     VtyEvent (EvKey KUp []) ->
       let nbCandidates = length candidates
-          newIndex = if index == nbCandidates - 1 then 0 else index + 1
+          newIndex = if index == 0 then nbCandidates - 1 else index - 1
       in continue $ appState { getClientState = voteState { getCandidateIndex = newIndex } }
     VtyEvent (EvKey KDown []) ->
       let nbCandidates = length candidates
-          newIndex = if index == 0 then nbCandidates - 1 else index - 1
+          newIndex = if index == nbCandidates - 1 then 0 else index + 1
       in continue $ appState { getClientState = voteState { getCandidateIndex = newIndex } }
     _ -> continue appState
 
@@ -175,8 +181,13 @@ execute "/vote" appState@(AppState ip port voteState@(Vote candidates _ ratings 
 -- ask for the result (be it partial or final)
 execute "/result" appState@(AppState ip port voteState) = do
   winner <- liftIO . fmap BS.unpack . executeRequest $ mkRequest ip port "/result" GET Nothing
-  let msg = "The current winner is " ++ winner ++ "."
+  let msg = if winner == "" then "No vote cast yet." else "The current winner is " ++ winner ++ "."
   continue $ appState { getClientState = Info msg voteState }
+
+-- generate the results PNG file
+execute "/generate" appState@(AppState ip port _) = do
+  liftIO . void . executeRequest $ mkRequest ip port "/generate" POST Nothing
+  continue appState
 
 execute _ appState@(AppState _ _ state) =
   continue $ appState { getClientState = Info "Invalid command." state }

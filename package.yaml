@@ -25,6 +25,7 @@ dependencies:
 - http-types >= 0.12.3
 - http-client >= 0.6.4.1
 - vty >= 5.28.2
+- process >= 1.6.9.0
 
 library:
   source-dirs: common
