@@ -1,12 +1,16 @@
 module Major where
 
 import Common
+import Matrix
 import qualified Data.Map.Strict as M
 import Data.List (maximumBy, intercalate)
 import Control.Monad (void)
 import System.Process (runCommand, waitForProcess)
 
 type Map = M.Map
+
+computeResults :: [String] -> Matrix Int -> IO [CandidateScore]
+computeResults candidateNames voteData = undefined -- TODO
 
 -- Given the collected ratings of each candidate, find the winner of the majority judgment election
 computeWinner :: Map Name [Rating] -> Name

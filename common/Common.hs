@@ -1,9 +1,17 @@
+{-# LANGUAGE DeriveGeneric #-}
+
 module Common where
+
+import GHC.Generics
+import Data.Aeson.Types
 
 type Name = String
 
 data Rating = Excellent | VeryGood | Good | Ok | Meh | Poor | Reject
-  deriving (Eq, Ord, Show, Read, Enum)
+  deriving (Eq, Ord, Show, Read, Enum, Generic)
+
+instance ToJSON Rating
+instance FromJSON Rating
 
 incrRating :: Rating -> Rating
 incrRating Excellent = Excellent
@@ -25,3 +33,26 @@ instance PrettyPrint Rating where
   pp Poor = "Poor :("
   pp Reject = "Reject >__<"
 
+data ElectionPhase =
+    Register
+  | Voting
+  | Results
+  deriving (Eq, Generic)
+
+data CandidateScore = CandidateScore {
+  candidateName :: String,
+  medianGrade :: Rating,
+  percentScore :: Double
+} deriving Generic
+
+data ServerState = ServerState {
+  phase :: ElectionPhase,
+  results :: Maybe [CandidateScore]
+} deriving Generic
+
+instance ToJSON ElectionPhase
+instance FromJSON ElectionPhase
+instance ToJSON CandidateScore
+instance FromJSON CandidateScore
+instance ToJSON ServerState
+instance FromJSON ServerState

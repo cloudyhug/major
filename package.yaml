@@ -26,6 +26,7 @@ dependencies:
 - http-client >= 0.6.4.1
 - vty >= 5.28.2
 - process >= 1.6.9.0
+- aeson >= 1.4.7.1
 
 library:
   source-dirs: common
