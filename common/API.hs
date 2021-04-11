@@ -47,11 +47,19 @@ instance Ord CandidateScore where
 
 data ServerState = ServerState {
   phase :: ElectionPhase,
-  results :: Maybe (Double, [CandidateScore])
+  results :: Maybe ElectionResults
 } deriving Generic
 
 instance ToJSON ServerState
 instance FromJSON ServerState
+
+data ElectionResults = ElectionResults {
+  participation :: Double,
+  scores :: [CandidateScore]
+} deriving Generic
+
+instance ToJSON ElectionResults
+instance FromJSON ElectionResults
 
 -- /votelogin response body
 

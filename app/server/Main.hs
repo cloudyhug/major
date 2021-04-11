@@ -1,9 +1,9 @@
-{-# LANGUAGE OverloadedStrings, TupleSections #-}
+{-# LANGUAGE OverloadedStrings #-}
 
 module Main where
 
 import API (Ballot(shards), CandidateInfo, ElectionPhase(Results, Register, Voting),
-            ServerState(ServerState), VoteShard(VoteShard))
+            ServerState(ServerState), VoteShard(VoteShard), ElectionResults(ElectionResults))
 import Major (computeResults)
 import Matrix (newMatrix, updateMatrix, Matrix)
 import Web.Scotty (get, json, jsonData, text, param, post, put, scotty, status)
@@ -21,6 +21,7 @@ import qualified Data.Set as S
 import qualified Data.Aeson as J
 import Data.Maybe (fromJust, fromMaybe, isNothing)
 import Data.Hashable (Hashable(hash))
+import Data.Functor((<&>))
 
 type Login = String
 type Password = String
@@ -63,8 +64,9 @@ main = do
         else do
           numberVotesCast <- readIORef numberVotesCastRef
           numberUsersRegistered <- M.size <$> readIORef userAuthRef
-          let participation = fromIntegral numberVotesCast / fromIntegral numberUsersRegistered
-          ServerState phase . Just . (participation,) <$> computeResults voteData numberVotesCast
+          let participationRate = fromIntegral numberVotesCast / fromIntegral numberUsersRegistered
+          computeResults voteData numberVotesCast
+            <&> ServerState phase . Just . ElectionResults (participationRate * 100.0)
 
     post "/register/:login/:password" $ do
       phase <- liftIO $ readIORef electionPhaseRef

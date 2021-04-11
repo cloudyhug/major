@@ -20,7 +20,7 @@ computeResults voteData@(Matrix (n, m) content) numberVotesCast =
         let newAccumulatedScore = accumulatedScore + score
             newAccumulatedScoreFlt = fromIntegral newAccumulatedScore in
         if newAccumulatedScoreFlt >= fiftyPercentOfVotesCastFlt then
-          (nextRating, newAccumulatedScoreFlt / numberVotesCastFlt)
+          (nextRating, newAccumulatedScoreFlt / numberVotesCastFlt * 100.0)
         else
           findMedian (succ nextRating) newAccumulatedScore scores
 
