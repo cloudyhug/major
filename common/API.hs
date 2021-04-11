@@ -47,21 +47,23 @@ instance Ord CandidateScore where
 
 data ServerState = ServerState {
   phase :: ElectionPhase,
-  results :: Maybe ElectionResults
+  info :: Maybe ElectionInfo
 } deriving Generic
 
 instance ToJSON ServerState
 instance FromJSON ServerState
 
-data ElectionResults = ElectionResults {
-  participation :: Double,
-  scores :: [CandidateScore]
-} deriving Generic
+data ElectionInfo =
+    ElectionResults {
+      participation :: Double,
+      scores :: [CandidateScore]
+    }
+  | VoteInfo {
+      candidatesInfo :: [CandidateInfo]
+    } deriving Generic
 
-instance ToJSON ElectionResults
-instance FromJSON ElectionResults
-
--- /votelogin response body
+instance ToJSON ElectionInfo
+instance FromJSON ElectionInfo
 
 data CandidateInfo = CandidateInfo {
   id :: Int,
@@ -72,14 +74,6 @@ data CandidateInfo = CandidateInfo {
 
 instance ToJSON CandidateInfo
 instance FromJSON CandidateInfo
-
-data VoteInfo = VoteInfo {
-  token :: Int,
-  candidatesInfo :: [CandidateInfo]
-} deriving Generic
-
-instance ToJSON VoteInfo
-instance FromJSON VoteInfo
 
 -- /vote request body
 
@@ -92,8 +86,17 @@ instance ToJSON VoteShard
 instance FromJSON VoteShard
 
 data Ballot = Ballot {
+  authentication :: Authentication,
   shards :: [VoteShard]
 } deriving Generic
 
 instance ToJSON Ballot
 instance FromJSON Ballot
+
+data Authentication = Authentication {
+  login :: String,
+  password :: String
+} deriving Generic
+
+instance ToJSON Authentication
+instance FromJSON Authentication

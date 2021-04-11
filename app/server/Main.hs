@@ -1,13 +1,13 @@
-{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE OverloadedStrings, LambdaCase #-}
 
 module Main where
 
-import API (Ballot(shards), CandidateInfo, ElectionPhase(Results, Register, Voting),
-            ServerState(ServerState), VoteShard(VoteShard), ElectionResults(ElectionResults))
+import API
 import Major (computeResults)
 import Matrix (newMatrix, updateMatrix, Matrix)
-import Web.Scotty (get, json, jsonData, text, param, post, put, scotty, status)
+import Web.Scotty
 import Web.Scotty.Internal.Types (ActionT)
+import Network.Wai.Middleware.Cors (simpleCors)
 import Network.HTTP.Types.Status (mkStatus)
 import Control.Monad.IO.Class (liftIO)
 import Control.Monad (when, unless, void, forM_, (<=<))
@@ -35,13 +35,15 @@ isValidConfig _ = True -- todo
 main :: IO ()
 main = do
   args <- getArgs
-  when (length args /= 3) $ fail "Wrong number of arguments"
-  let [portStr, inputFile, adminPassword] = args
-  let adminPwHash = hash adminPassword
-  let port = fromMaybe (-1) $ readMaybe portStr
+  when (length args /= 4) $ fail "Wrong number of arguments"
+  let [portStr, inputFile, adminLogin, adminPassword] = args
+      adminPwHash = hash adminPassword
+      port = fromMaybe (-1) $ readMaybe portStr
   when (port < 1024 || port > 65535) $ fail "Invalid port"
   maybeVoteConfig <- J.decodeFileStrict' inputFile
   when (isNothing maybeVoteConfig) $ fail "Config not found"
+
+  -- app state
 
   let candidatesInfo = fromJust maybeVoteConfig :: [CandidateInfo]
   unless (isValidConfig candidatesInfo) $ fail "Invalid config"
@@ -54,75 +56,91 @@ main = do
   -- cell (i, k) is the number of ratings k for candidate i
   voteData <- newMatrix (length candidatesInfo) 7 0 :: IO (Matrix Int)
 
-  scotty port $ do
+  -- REST API
 
+  scotty port $ do
+    middleware simpleCors
+
+    -- input body: empty
+    -- output body: ServerState (JSON)
     get "/state" $ do
       json <=< liftIO $ do
-        phase <- readIORef electionPhaseRef
-        if phase /= Results then
-          return $ ServerState phase Nothing
-        else do
-          numberVotesCast <- readIORef numberVotesCastRef
-          numberUsersRegistered <- M.size <$> readIORef userAuthRef
-          let participationRate = fromIntegral numberVotesCast / fromIntegral numberUsersRegistered
-          computeResults voteData numberVotesCast
-            <&> ServerState phase . Just . ElectionResults (participationRate * 100.0)
+        readIORef electionPhaseRef >>= \case
+          Register -> return $ ServerState Register Nothing
+          Voting -> return . ServerState Voting . Just $ VoteInfo candidatesInfo
+          Results -> do
+            numberVotesCast <- readIORef numberVotesCastRef
+            numberUsersRegisteredFlt <- fromIntegral . M.size <$> readIORef userAuthRef
+            if numberVotesCast == 0 then
+              return $ ServerState Results Nothing
+            else do
+              let numberVotesCastFlt = fromIntegral numberVotesCast
+                  participationRate = numberVotesCastFlt / numberUsersRegisteredFlt
+              computeResults voteData numberVotesCast
+                <&> ServerState Results . Just . ElectionResults (participationRate * 100.0)
 
-    post "/register/:login/:password" $ do
+    -- input body: Authentication (JSON)
+    -- output body: empty
+    post "/register" $ do
       phase <- liftIO $ readIORef electionPhaseRef
       if phase /= Register then
         status $ mkStatus 400 "Server not in Register state"
       else do
-        login <- param "login"
+        Authentication login password <- jsonData
         userAuth <- liftIO $ readIORef userAuthRef
         case M.lookup login userAuth of
           Just _ -> status $ mkStatus 409 "User already registered"
           Nothing -> do
-            pwHash <- hashPassword <$> param "password"
-            liftIO $ modifyIORef' userAuthRef (M.insert login pwHash)
+            liftIO $ modifyIORef' userAuthRef (M.insert login $ hashPassword password)
             status $ mkStatus 200 "Registered successfully"
     
-    post "/vote/:login/:password" $ do
+    -- input body: Ballot (JSON)
+    -- output body: empty
+    post "/vote" $ do
       phase <- liftIO $ readIORef electionPhaseRef
       if phase /= Voting then
         status $ mkStatus 400 "Server not in Voting state"
       else do
-        login <- param "login"
+        ballot <- jsonData
+        let (Authentication login password) = authentication ballot
         alreadyVoted <- liftIO $ S.member login <$> readIORef userVotesRef
         if alreadyVoted then
           status $ mkStatus 409 "User already voted"
         else do
-          pwHash <- hashPassword <$> param "password"
           userAuth <- liftIO $ readIORef userAuthRef
           case M.lookup login userAuth of
-            Just pwHashSaved | pwHash == pwHashSaved -> (json =<<) $ do
-              voteShards <- shards <$> jsonData
+            Just pwHashSaved | hashPassword password == pwHashSaved -> do
               liftIO $ do
-                forM_ voteShards $ \(VoteShard candidateId grade) -> do
+                forM_ (shards ballot) $ \(VoteShard candidateId grade) ->
                   updateMatrix voteData candidateId (fromEnum grade + 1) (+1)
                 modifyIORef' numberVotesCastRef (+1)
                 modifyIORef' userVotesRef (S.insert login)
               status $ mkStatus 200 "Voted successfully"
             _ -> status $ mkStatus 409 "Wrong credentials"
     
-    put "/admin/forward/:password" $ do
-      pwHash <- hashPassword <$> param "password"
-      if pwHash == adminPwHash then liftIO $ do
-        phase <- readIORef electionPhaseRef
-        case phase of
+    -- input body: Authentication (JSON)
+    -- output body: empty
+    put "/forward" $ do
+      Authentication login password <- jsonData
+      let pwHash = hashPassword password
+      if login == adminLogin && pwHash == adminPwHash then liftIO $ do
+        readIORef electionPhaseRef >>= \case
           Register -> writeIORef electionPhaseRef Voting
           Voting -> writeIORef electionPhaseRef Results
           Results -> return ()
       else
-        status $ mkStatus 409 "Wrong admin password"
+        status $ mkStatus 409 "Wrong admin credentials"
     
-    get "/admin/users/:password" $ do
-      pwHash <- hashPassword <$> param "password"
-      if pwHash == adminPwHash then text <=< liftIO $ do
+    -- input body: Authentication (JSON)
+    -- output body: raw text
+    get "/users" $ do
+      Authentication login password <- jsonData
+      let pwHash = hashPassword password
+      if login == adminLogin && pwHash == adminPwHash then text <=< liftIO $ do
         registeredUsers <- M.keysSet <$> readIORef userAuthRef
         usersWhoVoted <- readIORef userVotesRef
         return $ T.concat
           [ "registered: ", T.pack $ show (S.difference registeredUsers usersWhoVoted),
             "\nvoted: ", T.pack $ show usersWhoVoted ]
       else
-        status $ mkStatus 409 "Wrong admin password"
+        status $ mkStatus 409 "Wrong admin credentials"
