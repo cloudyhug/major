@@ -1,48 +1,28 @@
 module Major where
 
-import API
-import Matrix
-import qualified Data.Map.Strict as M
-import Data.List (maximumBy, intercalate)
-import Control.Monad (void)
-import System.Process (runCommand, waitForProcess)
+import API (CandidateScore(CandidateScore), Rating(Excellent))
+import Matrix (Matrix(Matrix), elemsMatrix)
+import Data.List (sortBy)
 
-type Map = M.Map
+computeResults :: Matrix Int -> Int -> IO [CandidateScore]
+computeResults voteData@(Matrix (n, m) content) numberVotesCast =
+  sortBy (flip compare) . zipWith computeCandidateScore [1..n] <$> elemsMatrix voteData
+    where
+      numberVotesCastFlt = fromIntegral numberVotesCast
+      fiftyPercentOfVotesCastFlt = fromIntegral numberVotesCast / 2.0
 
-computeResults :: Matrix Int -> IO [CandidateScore]
-computeResults voteData = return [] -- TODO
+      computeCandidateScore :: Int -> [Int] -> CandidateScore
+      computeCandidateScore scoreId row =
+        uncurry (CandidateScore scoreId) $ findMedian Excellent 0 row
 
--- -- Given the collected ratings of each candidate, find the winner of the majority judgment election
--- computeWinner :: Map Name [Rating] -> Name
--- computeWinner = selectBestMedianGrade . fmap (computeMedianGrade . computeStatistics)
-
--- -- Given the median grade and proportion of each candidate, find the guy with the best data
--- selectBestMedianGrade :: Map Name (Rating, Double) -> Name
--- selectBestMedianGrade medianGrades = fst bestCandidate
---   where
---     medianGradesAssocs = M.assocs medianGrades
---     -- the ratings are ordered from best to worst, so best grade = minimum
---     maxMedianGrade = minimum $ map (fst . snd) medianGradesAssocs
---     maxCandidates = filter ((== maxMedianGrade) . fst . snd) medianGradesAssocs
---     bestCandidate = maximumBy (\(_, (_, p1)) (_, (_, p2)) -> compare p1 p2) maxCandidates
-
--- -- Given the proportion for each rating on a candidate, find the median grade
--- -- and the proportion of people that gave at least this grade to the candidate
--- computeMedianGrade :: Map Rating Double -> (Rating, Double)
--- computeMedianGrade = snd . M.foldlWithKey' addNext (False, (Reject, 0))
---   where
---     -- the boolean tells whether we have found the median grade
---     addNext acc@(True, _) _ _ = acc
---     addNext (False, (curR, curP)) r p =
---       if curP >= 0.5 then (True, (curR, curP)) else (False, (r, curP + p))
-
--- -- Given a list of ratings for a candidate, compute the proportion for each rating
--- computeStatistics :: [Rating] -> Map Rating Double
--- computeStatistics ratings = fmap (\r -> fromIntegral r / numOfRatings) countedRatings
---   where
---     emptyData = M.fromList $ fmap (\r -> (r, 0)) [Reject, Poor, Meh, Ok, Good, VeryGood, Excellent]
---     countedRatings = foldl (flip (M.adjust succ)) emptyData ratings 
---     numOfRatings = fromIntegral $ M.foldl' (+) 0 countedRatings
+      findMedian :: Rating -> Int -> [Int] -> (Rating, Double)
+      findMedian nextRating accumulatedScore (score : scores) =
+        let newAccumulatedScore = accumulatedScore + score
+            newAccumulatedScoreFlt = fromIntegral newAccumulatedScore in
+        if newAccumulatedScoreFlt >= fiftyPercentOfVotesCastFlt then
+          (nextRating, newAccumulatedScoreFlt / numberVotesCastFlt)
+        else
+          findMedian (succ nextRating) newAccumulatedScore scores
 
 -- -- exports data for plotting
 -- exportStatistics :: Map Name (Map Rating Double) -> String -> IO ()

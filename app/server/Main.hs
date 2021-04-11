@@ -1,27 +1,26 @@
-{-# LANGUAGE OverloadedStrings, TupleSections, NumericUnderscores #-}
+{-# LANGUAGE OverloadedStrings, TupleSections #-}
 
 module Main where
 
-import API
-import Major
-import Web.Scotty
+import API (Ballot(shards), CandidateInfo, ElectionPhase(Results, Register, Voting),
+            ServerState(ServerState), VoteShard(VoteShard))
+import Major (computeResults)
+import Matrix (newMatrix, updateMatrix, Matrix)
+import Web.Scotty (get, json, jsonData, text, param, post, put, scotty, status)
 import Web.Scotty.Internal.Types (ActionT)
-import qualified Data.Map.Strict as M
-import Data.IORef
+import Network.HTTP.Types.Status (mkStatus)
 import Control.Monad.IO.Class (liftIO)
-import qualified Data.ByteString.Lazy.Char8 as BS
-import Data.Text.Lazy (Text)
+import Control.Monad (when, unless, void, forM_, (<=<))
 import System.Environment (getArgs)
 import Text.Read (readMaybe)
-import Control.Monad (when, unless, void, forM_)
-import Matrix
-import Network.HTTP.Types.Status
+import Data.IORef (modifyIORef', newIORef, readIORef, writeIORef, IORef)
+import qualified Data.ByteString.Lazy.Char8 as BS
+import qualified Data.Text.Lazy as T
+import qualified Data.Map.Strict as M
 import qualified Data.Set as S
 import qualified Data.Aeson as J
-import Data.Maybe
-import System.Random
-import Control.Concurrent
-import Data.Hashable
+import Data.Maybe (fromJust, fromMaybe, isNothing)
+import Data.Hashable (Hashable(hash))
 
 type Login = String
 type Password = String
@@ -57,15 +56,15 @@ main = do
   scotty port $ do
 
     get "/state" $ do
-      (json =<<) $ liftIO $ do
+      json <=< liftIO $ do
         phase <- readIORef electionPhaseRef
         if phase /= Results then
           return $ ServerState phase Nothing
         else do
-          numberVotesCast <- fromIntegral <$> readIORef numberVotesCastRef
-          numberUsersRegistered <- fromIntegral . M.size <$> readIORef userAuthRef
-          let participation = numberVotesCast / numberUsersRegistered
-          ServerState phase . Just . (participation,) <$> computeResults voteData
+          numberVotesCast <- readIORef numberVotesCastRef
+          numberUsersRegistered <- M.size <$> readIORef userAuthRef
+          let participation = fromIntegral numberVotesCast / fromIntegral numberUsersRegistered
+          ServerState phase . Just . (participation,) <$> computeResults voteData numberVotesCast
 
     post "/register/:login/:password" $ do
       phase <- liftIO $ readIORef electionPhaseRef
@@ -79,6 +78,7 @@ main = do
           Nothing -> do
             pwHash <- hashPassword <$> param "password"
             liftIO $ modifyIORef' userAuthRef (M.insert login pwHash)
+            status $ mkStatus 200 "Registered successfully"
     
     post "/vote/:login/:password" $ do
       phase <- liftIO $ readIORef electionPhaseRef
@@ -99,6 +99,8 @@ main = do
                 forM_ voteShards $ \(VoteShard candidateId grade) -> do
                   updateMatrix voteData candidateId (fromEnum grade + 1) (+1)
                 modifyIORef' numberVotesCastRef (+1)
+                modifyIORef' userVotesRef (S.insert login)
+              status $ mkStatus 200 "Voted successfully"
             _ -> status $ mkStatus 409 "Wrong credentials"
     
     put "/admin/forward/:password" $ do
@@ -109,5 +111,16 @@ main = do
           Register -> writeIORef electionPhaseRef Voting
           Voting -> writeIORef electionPhaseRef Results
           Results -> return ()
+      else
+        status $ mkStatus 409 "Wrong admin password"
+    
+    get "/admin/users/:password" $ do
+      pwHash <- hashPassword <$> param "password"
+      if pwHash == adminPwHash then text <=< liftIO $ do
+        registeredUsers <- M.keysSet <$> readIORef userAuthRef
+        usersWhoVoted <- readIORef userVotesRef
+        return $ T.concat
+          [ "registered: ", T.pack $ show (S.difference registeredUsers usersWhoVoted),
+            "\nvoted: ", T.pack $ show usersWhoVoted ]
       else
         status $ mkStatus 409 "Wrong admin password"

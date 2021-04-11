@@ -11,6 +11,14 @@ data Rating = Excellent | Good | Satisfactory | Sufficient | Disappointing | Bad
 instance ToJSON Rating
 instance FromJSON Rating
 
+instance Ord Rating where
+  compare grade1 grade2 =
+    -- higher enum rank => lower grade
+    case (fromEnum grade1 - fromEnum grade2) of
+      0             -> EQ
+      n | n > 0     -> LT
+        | otherwise -> GT
+
 -- /state response body
 
 data ElectionPhase =
@@ -26,10 +34,16 @@ data CandidateScore = CandidateScore {
   scoreId :: Int,
   medianGrade :: Rating,
   percentScore :: Double
-} deriving Generic
+} deriving (Eq, Generic)
 
 instance ToJSON CandidateScore
 instance FromJSON CandidateScore
+
+instance Ord CandidateScore where
+  compare (CandidateScore _ median1 score1) (CandidateScore _ median2 score2) =
+    case compare median1 median2 of
+      EQ -> compare score1 score2
+      cmp -> cmp
 
 data ServerState = ServerState {
   phase :: ElectionPhase,
