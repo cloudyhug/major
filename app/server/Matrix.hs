@@ -13,11 +13,11 @@ newMatrix :: MArray IOUArray a IO => Int -> Int -> a -> IO (Matrix a)
 newMatrix n m e = Matrix (n, m) <$> newArray (1, n * m) e
 
 readMatrix :: MArray IOUArray a IO => Matrix a -> Int -> Int -> IO a
-readMatrix (Matrix (n, _) arr) x y = readArray arr (x * n + y)
+readMatrix (Matrix (n, _) arr) x y = readArray arr ((x - 1) * n + y)
 
 writeMatrix :: MArray IOUArray a IO => Matrix a -> Int -> Int -> a -> IO ()
-writeMatrix (Matrix (n, _) arr) x y = writeArray arr (x * n + y)
+writeMatrix (Matrix (n, _) arr) x y = writeArray arr ((x - 1) * n + y)
 
 updateMatrix :: MArray IOUArray a IO => Matrix a -> Int -> Int -> (a -> a) -> IO ()
 updateMatrix (Matrix (n, _) arr) x y f = writeArray arr i . f =<< readArray arr i
-  where i = x * n + y 
+  where i = (x - 1) * n + y 

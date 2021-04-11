@@ -3,7 +3,7 @@
 module Main where
 
 import System.Environment (getArgs)
-import Common
+import API
 import Text.Read (readMaybe)
 import Text.Regex.PCRE ((=~))
 import Brick
