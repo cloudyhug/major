@@ -1,48 +1,16 @@
 {
+    "authentication": { "login": "toto", "password": "1234" },
     "shards": [
-        {
-            "candidateId": 1,
-            "grade": "Terrible"
-        },
-        {
-            "candidateId": 3,
-            "grade": "Disappointing"
-        },
-        {
-            "candidateId": 11,
-            "grade": "Terrible"
-        },
-        {
-            "candidateId": 4,
-            "grade": "Bad"
-        },
-        {
-            "candidateId": 9,
-            "grade": "Satisfactory"
-        },
-        {
-            "candidateId": 2,
-            "grade": "Satisfactory"
-        },
-        {
-            "candidateId": 5,
-            "grade": "Good"
-        },
-        {
-            "candidateId": 6,
-            "grade": "Bad"
-        },
-        {
-            "candidateId": 7,
-            "grade": "Terrible"
-        },
-        {
-            "candidateId": 8,
-            "grade": "Sufficient"
-        },
-        {
-            "candidateId": 10,
-            "grade": "Excellent"
-        }
+        { "candidateId": 1, "grade": "Terrible" },
+        { "candidateId": 2, "grade": "Terrible" },
+        { "candidateId": 3, "grade": "Terrible" },
+        { "candidateId": 4, "grade": "Terrible" },
+        { "candidateId": 5, "grade": "Terrible" },
+        { "candidateId": 6, "grade": "Terrible" },
+        { "candidateId": 7, "grade": "Terrible" },
+        { "candidateId": 8, "grade": "Terrible" },
+        { "candidateId": 9, "grade": "Terrible" },
+        { "candidateId": 10, "grade": "Terrible" },
+        { "candidateId": 11, "grade": "Terrible" }
     ]
 }

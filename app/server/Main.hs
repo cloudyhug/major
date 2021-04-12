@@ -8,7 +8,7 @@ import Matrix (newMatrix, updateMatrix, Matrix)
 import Web.Scotty
 import Web.Scotty.Internal.Types (ActionT)
 import Network.Wai.Middleware.Cors (simpleCors)
-import Network.HTTP.Types.Status (mkStatus)
+import Network.HTTP.Types.Status (status400, status409)
 import Control.Monad.IO.Class (liftIO)
 import Control.Monad (when, unless, void, forM_, (<=<))
 import System.Environment (getArgs)
@@ -84,28 +84,28 @@ main = do
     post "/register" $ do
       phase <- liftIO $ readIORef electionPhaseRef
       if phase /= Register then
-        status $ mkStatus 400 "Server not in Register state"
+        status status400 >> addHeader "message" "Election is not in Register phase"
       else do
         Authentication login password <- jsonData
         userAuth <- liftIO $ readIORef userAuthRef
         case M.lookup login userAuth of
-          Just _ -> status $ mkStatus 409 "User already registered"
+          Just _ -> status status409 >> addHeader "message" "User already registered"
           Nothing -> do
             liftIO $ modifyIORef' userAuthRef (M.insert login $ hashPassword password)
-            status $ mkStatus 200 "Registered successfully"
+            addHeader "message" "Registered successfully"
     
     -- input body: Ballot (JSON)
     -- output body: empty
     post "/vote" $ do
       phase <- liftIO $ readIORef electionPhaseRef
-      if phase /= Voting then
-        status $ mkStatus 400 "Server not in Voting state"
+      if phase /= Voting then do
+        status status400 >> addHeader "message" "Election is not in Voting phase"
       else do
         ballot <- jsonData
         let (Authentication login password) = authentication ballot
         alreadyVoted <- liftIO $ S.member login <$> readIORef userVotesRef
         if alreadyVoted then
-          status $ mkStatus 409 "User already voted"
+          status status409 >> addHeader "message" "User already voted"
         else do
           userAuth <- liftIO $ readIORef userAuthRef
           case M.lookup login userAuth of
@@ -115,8 +115,8 @@ main = do
                   updateMatrix voteData candidateId (fromEnum grade + 1) (+1)
                 modifyIORef' numberVotesCastRef (+1)
                 modifyIORef' userVotesRef (S.insert login)
-              status $ mkStatus 200 "Voted successfully"
-            _ -> status $ mkStatus 409 "Wrong credentials"
+              addHeader "message" "Voted successfully"
+            _ -> status status409 >> addHeader "message" "Wrong credentials"
     
     -- input body: Authentication (JSON)
     -- output body: empty
@@ -128,12 +128,11 @@ main = do
           Register -> writeIORef electionPhaseRef Voting
           Voting -> writeIORef electionPhaseRef Results
           Results -> return ()
-      else
-        status $ mkStatus 409 "Wrong admin credentials"
+      else status status409 >> addHeader "message" "Wrong admin credentials"
     
     -- input body: Authentication (JSON)
     -- output body: raw text
-    get "/users" $ do
+    post "/users" $ do
       Authentication login password <- jsonData
       let pwHash = hashPassword password
       if login == adminLogin && pwHash == adminPwHash then text <=< liftIO $ do
@@ -142,5 +141,4 @@ main = do
         return $ T.concat
           [ "registered: ", T.pack $ show (S.difference registeredUsers usersWhoVoted),
             "\nvoted: ", T.pack $ show usersWhoVoted ]
-      else
-        status $ mkStatus 409 "Wrong admin credentials"
+      else status status409 >> addHeader "message" "Wrong admin credentials"
