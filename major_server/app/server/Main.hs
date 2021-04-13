@@ -57,7 +57,6 @@ main = do
   voteData <- newMatrix (length candidatesInfo) 7 0 :: IO (Matrix Int)
 
   -- REST API
-
   scotty port $ do
     middleware simpleCors
 
