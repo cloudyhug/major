@@ -24,3 +24,5 @@ For example, if we were to simulate the 2017 French presidential election in a m
 Every voter would enter the IP and the port in the Android application.
 
 Then everyone would first register (once!) then vote and wait for the results. The administrator can make the state machine go forward, from state `Register` to `Voting` and then `Results`. In the `Results` state, everyone can see the results of the election and the winner.
+
+**NOTE**: The Haskell server does not handle TLS, and the Android application sends HTTPS requests. This means that both are not compatible as is. You will need to setup a reverse proxy on the server running the back-end, so that the content of the packets is not disclosed publicly **and** manual certificate management is not needed (with such web servers as Caddy).
