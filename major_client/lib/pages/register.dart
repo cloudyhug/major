@@ -33,9 +33,8 @@ class RegisterPageState extends State<RegisterPage> {
         ),
       ),
       body: Center(
-        child: FractionallySizedBox(
-          heightFactor: 0.80,
-          widthFactor: 0.60,
+        child: Padding(
+          padding: EdgeInsets.all(8.0),
           child: Column(
             children: <Widget>[
               Padding(

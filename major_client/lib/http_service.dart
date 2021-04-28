@@ -28,7 +28,13 @@ class HttpService {
   Future<Either<String, Unit>> register(Authentication auth) async {
     Uri uri = Uri(scheme: scheme, host: server, port: port, path: '/register');
     try {
-      Response res = await client.post(uri, body: jsonEncode(auth.toJson()));
+      Response res = await client.post(
+        uri,
+        headers: <String, String>{
+          "Content-Type": "application/json"
+        },
+        body: jsonEncode(auth.toJson())
+      );
       if (res.statusCode == 200) {
         return Either.right(Unit());
       } else {
@@ -42,7 +48,13 @@ class HttpService {
   Future<Either<String, Unit>> vote(Ballot ballot) async {
     Uri uri = Uri(scheme: scheme, host: server, port: port, path: '/vote');
     try {
-      Response res = await client.post(uri, body: jsonEncode(ballot.toJson()));
+      Response res = await client.post(
+        uri,
+        headers: <String, String>{
+          "Content-Type": "application/json"
+        },
+        body: jsonEncode(ballot.toJson())
+      );
       if (res.statusCode == 200) {
         return Either.right(Unit());
       } else {

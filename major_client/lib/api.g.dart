@@ -67,7 +67,6 @@ const _$ElectionPhaseEnumMap = {
 
 ElectionInfo _$ElectionInfoFromJson(Map<String, dynamic> json) {
   return ElectionInfo(
-    tag: json['tag'] as String,
     participation: (json['participation'] as num?)?.toDouble(),
     scores: (json['scores'] as List<dynamic>?)
         ?.map((e) => CandidateScore.fromJson(e as Map<String, dynamic>))

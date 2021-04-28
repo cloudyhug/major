@@ -1,0 +1,19 @@
+[package]
+name = "major_server"
+version = "1.0.0"
+license = "MIT"
+authors = ["cloudyhug <cloudyhug@protonmail.ch>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+actix-web = "3.3.2"
+actix-cors = "0.5.4"
+serde = { version = "1.0.125", features = ["derive"] }
+serde_derive = "1.0.125"
+serde_json = "1.0.64"
+
+# for debugging only
+futures = "0.3.14"
+actix-service = "1"

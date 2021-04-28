@@ -51,13 +51,10 @@ class ServerState {
 
 @JsonSerializable(createToJson: false)
 class ElectionInfo {
-  final String tag;
-  // when in Results phase
   final double? participation;
   final List<CandidateScore>? scores;
-  // when in Voting phase
   final List<CandidateInfo>? candidatesInfo;
-  ElectionInfo({required this.tag, this.participation, this.scores, this.candidatesInfo});
+  ElectionInfo({this.participation, this.scores, this.candidatesInfo});
   factory ElectionInfo.fromJson(Map<String, dynamic> json) => _$ElectionInfoFromJson(json);
 }
 

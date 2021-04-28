@@ -26,11 +26,6 @@ class VotingPageState extends State<VotingPage> {
   Widget build(BuildContext context) {
     final ElectionInfo info = ModalRoute.of(context)!.settings.arguments as ElectionInfo;
 
-    Map<int, Rating> candidateRatings = Map.fromIterable(
-      info.candidatesInfo!,
-      key: (candidateInfo) => (candidateInfo as CandidateInfo).id,
-      value: (_) => Rating.Terrible
-    );
     appState.candidatesInfo = Map.fromIterable(
       info.candidatesInfo!,
       key: (candidateInfo) => (candidateInfo as CandidateInfo).id,
@@ -51,7 +46,6 @@ class VotingPageState extends State<VotingPage> {
           subtitle: Text(candidateInfo.party),
           trailing: RatingDropdownButton(
             candidateInfo.id,
-            update: (rating) => candidateRatings[candidateInfo.id] = rating
           )
         );
       }).toList();
@@ -98,7 +92,7 @@ class VotingPageState extends State<VotingPage> {
         width: double.infinity,
         child: ElevatedButton(
           child: const Text('Vote'),
-          onPressed: () async {
+          onPressed: appState.hasVoted ? null : () async {
             Authentication auth = Authentication(
               login: loginTextController.text,
               password: passwordTextController.text
@@ -110,7 +104,7 @@ class VotingPageState extends State<VotingPage> {
                   (tile as ListTile).trailing! as RatingDropdownButton;
                 return VoteShard(
                   candidateId: dropdownButton.candidateId,
-                  grade: candidateRatings[dropdownButton.candidateId]!
+                  grade: dropdownButton.dropdownValue.value
                 );
               }).toList()
             );
@@ -139,8 +133,11 @@ class VotingPageState extends State<VotingPage> {
         )
       ),
       body: Center(
-        child: ListView(
-          children: widgets
+        child: Padding(
+          padding: EdgeInsets.all(8.0),
+          child: ListView(
+            children: widgets
+          )
         )
       )
     );
@@ -149,35 +146,33 @@ class VotingPageState extends State<VotingPage> {
 
 class RatingDropdownButton extends StatefulWidget {
   final int candidateId;
-  final void Function(Rating) update;
+  final Box<Rating> dropdownValue = Box(Rating.Terrible);
 
-  RatingDropdownButton(this.candidateId, {required this.update});
+  RatingDropdownButton(this.candidateId);
 
   @override
-  State<StatefulWidget> createState() => RatingDropdownButtonState(candidateId, update);
+  State<StatefulWidget> createState() => RatingDropdownButtonState();
 }
 
 class RatingDropdownButtonState extends State<RatingDropdownButton> {
-  final int candidateId;
-  final void Function(Rating) update;
-  Rating dropdownValue = Rating.Terrible;
-
-  RatingDropdownButtonState(this.candidateId, this.update);
-
   @override
   Widget build(BuildContext context) {
     return DropdownButton<Rating>(
-      value: dropdownValue,
+      value: widget.dropdownValue.value,
       icon: const Icon(Icons.how_to_vote_rounded),
       items: possibleRatings.map((rating) => DropdownMenuItem<Rating>(
         value: rating,
         child: Text(showRating(rating))
       )).toList(),
       onChanged: (rating) => setState(() {
-        dropdownValue = rating!;
-        update(rating);
+        widget.dropdownValue.value = rating!;
       })
     );
   }
 
+}
+
+class Box<T> {
+  T value;
+  Box(this.value);
 }

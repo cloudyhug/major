@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:major_client/api.dart';
 import 'package:major_client/app_state.dart';
 import 'package:major_client/util/either.dart';
@@ -15,12 +16,15 @@ class HomePage extends StatelessWidget {
 
     return Scaffold(
       body: Center(
-        child: FractionallySizedBox(
-          heightFactor: 0.80,
-          widthFactor: 0.60,
+        child: Padding(
+          padding: EdgeInsets.all(8.0),
           child: Column(
             children: <Widget>[
-              Text('major'),
+              Image.asset(
+                'assets/logo.png',
+                width: 300.0,
+                height: 300.0
+              ),
 
               Padding(
                 padding: EdgeInsets.only(top: 8.0),
@@ -54,8 +58,17 @@ class HomePage extends StatelessWidget {
                   child: ElevatedButton(
                     child: const Text('Connect to server'),
                     onPressed: () async {
-                      appState.httpService.server = serverTextController.text;
-                      appState.httpService.port = int.parse(portTextController.text);
+                      var server = serverTextController.text;
+                      var port = int.parse(portTextController.text);
+                      if (server != appState.httpService.server
+                          || port != appState.httpService.port) {
+                        appState.httpService.server = serverTextController.text;
+                        appState.httpService.port = int.parse(portTextController.text);
+                        appState.httpService.client = Client();
+                        appState.candidatesInfo = Map();
+                        appState.hasRegistered = false;
+                        appState.hasVoted = false;
+                      }
                       Either<String, ServerState> res = await appState.httpService.getState();
                       if (res.isRight()) {
                         ServerState state = res.right!;
@@ -81,11 +94,7 @@ class HomePage extends StatelessWidget {
                             }
                             break;
                           case ElectionPhase.Results:
-                            Navigator.pushNamed(
-                              context,
-                              '/results',
-                              arguments: state.info
-                            );
+                            await Navigator.pushNamed(context, '/results', arguments: state.info);
                         }
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(

@@ -1,4 +1,3 @@
-.stack-work/
-*~
-.DS_Store
-**/.DS_Store
+debug/
+target/
+Cargo.lock
