@@ -7,7 +7,7 @@ import 'package:major_client/util/either.dart';
 class HomePage extends StatelessWidget {
   final AppState appState;
 
-  HomePage(this.appState);
+  const HomePage(this.appState);
 
   @override
   Widget build(BuildContext context) {
@@ -20,10 +20,13 @@ class HomePage extends StatelessWidget {
           padding: EdgeInsets.all(8.0),
           child: Column(
             children: <Widget>[
-              Image.asset(
-                'assets/logo.png',
-                width: 300.0,
-                height: 300.0
+              Padding(
+                padding: EdgeInsets.only(top: 24.0),
+                child: Image.asset(
+                  'assets/logo.png',
+                  width: 300.0,
+                  height: 300.0
+                )
               ),
 
               Padding(
@@ -94,7 +97,7 @@ class HomePage extends StatelessWidget {
                             }
                             break;
                           case ElectionPhase.Results:
-                            await Navigator.pushNamed(context, '/results', arguments: state.info);
+                            Navigator.pushNamed(context, '/results', arguments: state.info);
                         }
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
@@ -108,6 +111,12 @@ class HomePage extends StatelessWidget {
             ]
           )
         )
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: const Icon(Icons.info_outline_rounded),
+        onPressed: () {
+          Navigator.pushNamed(context, '/info');
+        }
       )
     );
   }

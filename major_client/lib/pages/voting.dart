@@ -4,24 +4,10 @@ import 'package:major_client/api.dart';
 import 'package:major_client/util/either.dart';
 import 'package:major_client/util/unit.dart';
 
-class VotingPage extends StatefulWidget {
+class VotingPage extends StatelessWidget {
   final AppState appState;
 
   VotingPage(this.appState);
-
-  @override
-  State<StatefulWidget> createState() => VotingPageState(appState);
-}
-
-class VotingPageState extends State<VotingPage> {
-  final AppState appState;
-  bool showPassword = false;
-  String login = "";
-  String password = "";
-  TextEditingController loginTextController = TextEditingController();
-  TextEditingController passwordTextController = TextEditingController();
-
-  VotingPageState(this.appState);
 
   Widget build(BuildContext context) {
     final ElectionInfo info = ModalRoute.of(context)!.settings.arguments as ElectionInfo;
@@ -50,41 +36,14 @@ class VotingPageState extends State<VotingPage> {
         );
       }).toList();
 
-    Widget loginWidget = Padding(
-      padding: EdgeInsets.only(top: 8.0),
-      child: TextField(
-        keyboardType: TextInputType.text,
-        controller: loginTextController,
-        decoration: InputDecoration(
-          labelText: 'Login',
-          border: const OutlineInputBorder()
-        ),
-        onChanged: (text) => setState(() { login = text; })
-      )
-    );
+    CredentialsWidget credentialsWidget = CredentialsWidget();
 
-    Widget passwordWidget = Padding(
-      padding: EdgeInsets.only(top: 8.0),
-      child: TextField(
-        keyboardType: TextInputType.text,
-        obscureText: !showPassword,
-        controller: passwordTextController,
-        decoration: InputDecoration(
-          labelText: 'Password',
-          border: const OutlineInputBorder(),
-          suffixIcon: IconButton(
-            icon: Icon(
-              Icons.remove_red_eye,
-              color: showPassword ? Colors.blue : Colors.grey
-            ),
-            onPressed: () {
-              setState(() { showPassword = !showPassword; });
-            }
-          )
-        ),
-        onChanged: (text) => setState(() { password = passwordTextController.text; })
-      )
-    );
+  //   final TextEditingController loginTextController = TextEditingController();
+  // final TextEditingController passwordTextController = TextEditingController();
+  // final Box<bool> validated = Box(false);
+  // final Box<bool> showPassword = Box(false);
+  // final Box<String> login = Box("");
+  // final Box<String> password = Box("");
 
     Widget voteWidget = Padding(
       padding: EdgeInsets.only(top: 8.0),
@@ -94,8 +53,8 @@ class VotingPageState extends State<VotingPage> {
           child: const Text('Vote'),
           onPressed: appState.hasVoted ? null : () async {
             Authentication auth = Authentication(
-              login: loginTextController.text,
-              password: passwordTextController.text
+              login: credentialsWidget.loginTextController.text,
+              password: credentialsWidget.passwordTextController.text
             );
             Ballot ballot = Ballot(
               authentication: auth,
@@ -122,7 +81,7 @@ class VotingPageState extends State<VotingPage> {
       )
     );
 
-    List<Widget> widgets = [loginWidget, passwordWidget] + candidateWidgets + [voteWidget];
+    List<Widget> widgets = <Widget>[credentialsWidget] + candidateWidgets + [voteWidget];
 
     return Scaffold(
       appBar: AppBar(
@@ -176,3 +135,90 @@ class Box<T> {
   T value;
   Box(this.value);
 }
+
+class CredentialsWidget extends StatefulWidget {
+  final TextEditingController loginTextController = TextEditingController();
+  final TextEditingController passwordTextController = TextEditingController();
+  final Box<bool> validated = Box(false);
+  final Box<bool> showPassword = Box(false);
+
+  @override
+  State<StatefulWidget> createState() => CredentialsWidgetState();
+}
+
+class CredentialsWidgetState extends State<CredentialsWidget> {
+  @override
+  Widget build(BuildContext context) {
+    Widget loginWidget = Padding(
+      padding: const EdgeInsets.only(top: 8.0),
+      child: TextField(
+        enabled: !widget.validated.value,
+        keyboardType: TextInputType.text,
+        controller: widget.loginTextController,
+        decoration: InputDecoration(
+          labelText: 'Login',
+          border: const OutlineInputBorder()
+        ),
+      )
+    );
+
+    Widget passwordWidget = Padding(
+      padding: const EdgeInsets.only(top: 8.0),
+      child: TextField(
+        enabled: !widget.validated.value,
+        keyboardType: TextInputType.text,
+        obscureText: !widget.showPassword.value,
+        controller: widget.passwordTextController,
+        decoration: InputDecoration(
+          labelText: 'Password',
+          border: const OutlineInputBorder(),
+          suffixIcon: IconButton(
+            icon: Icon(
+              Icons.remove_red_eye,
+              color: widget.showPassword.value ? Colors.blue : Colors.grey
+            ),
+            onPressed: () {
+              setState(() { widget.showPassword.value = !widget.showPassword.value; });
+            }
+          )
+        )
+      )
+    );
+
+    // Widget validateWidget = Padding(
+    //   padding: const EdgeInsets.only(top: 8.0),
+    //   child: SizedBox(
+    //     width: double.infinity,
+    //     child: ElevatedButton(
+    //       child: const Text('Validate credentials'),
+    //       onPressed: widget.validated.value ? null : () {
+    //         setState(() { widget.validated.value = true; });
+    //       }
+    //     )
+    //   )
+    // );
+
+    Widget validateWidget = Padding(
+      padding: const EdgeInsets.only(top: 8.0),
+      child: Row(
+        children: [
+          const Text('Lock credentials'),
+          Switch(
+            value: widget.validated.value,
+            onChanged: (newValue) {
+              setState(() { widget.validated.value = newValue; });
+            }
+          )
+        ]
+      )
+    );
+
+    return SizedBox(
+      height: 200,
+      child: Column(
+        children: [loginWidget, passwordWidget, validateWidget]
+      )
+    );
+  }
+}
+

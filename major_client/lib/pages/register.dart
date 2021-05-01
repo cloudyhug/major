@@ -7,7 +7,7 @@ import 'package:major_client/util/unit.dart';
 class RegisterPage extends StatefulWidget {
   final AppState appState;
 
-  RegisterPage(this.appState);
+  const RegisterPage(this.appState);
 
   @override
   State<StatefulWidget> createState() => RegisterPageState(appState);
@@ -28,17 +28,17 @@ class RegisterPageState extends State<RegisterPage> {
       appBar: AppBar(
         title: const Text('Register phase'),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_rounded),
+          icon: const Icon(Icons.arrow_back_rounded),
           onPressed: () { Navigator.pop(context); }
         ),
       ),
       body: Center(
         child: Padding(
-          padding: EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(8.0),
           child: Column(
             children: <Widget>[
               Padding(
-                padding: EdgeInsets.only(top: 8.0),
+                padding: const EdgeInsets.only(top: 8.0),
                 child: TextField(
                   keyboardType: TextInputType.text,
                   controller: loginTextController,
@@ -51,7 +51,7 @@ class RegisterPageState extends State<RegisterPage> {
               ),
 
               Padding(
-                padding: EdgeInsets.only(top: 8.0),
+                padding: const EdgeInsets.only(top: 8.0),
                 child: TextField(
                   keyboardType: TextInputType.text,
                   obscureText: !showPassword,
@@ -72,7 +72,7 @@ class RegisterPageState extends State<RegisterPage> {
               ),
 
               Padding(
-                padding: EdgeInsets.only(top: 8.0),
+                padding: const EdgeInsets.only(top: 8.0),
                 child: SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(

@@ -138,7 +138,8 @@ async fn state(data: web::Data<AppState>) -> impl Responder {
         }
       }
     };
-  HttpResponse::Ok()
+  println!("[info] /state");
+  return HttpResponse::Ok()
     .content_type("application/json; charset=utf-8")
     .json(state)
 }
@@ -149,12 +150,14 @@ async fn register(
   body: web::Json<Authentication>,
   data: web::Data<AppState>
 ) -> impl Responder {
+  println!("[info] /register");
   if *data.election_phase.lock().unwrap() != ElectionPhase::Register {
     let mut res = HttpResponse::new(StatusCode::BAD_REQUEST);
     res.headers_mut().insert(
       HeaderName::from_static("message"),
       HeaderValue::from_static("Election is not in Register phase")
     );
+    println!("wrong phase");
     return res;
   } else {
     let user_auth = &mut *data.user_auth.lock().unwrap();
@@ -164,6 +167,7 @@ async fn register(
         HeaderName::from_static("message"),
         HeaderValue::from_static("User already registered")
       );
+      println!("double registration");
       return res; 
     } else {
       let auth = body.into_inner();
@@ -185,12 +189,14 @@ async fn vote(
   body: web::Json<Ballot>,
   data: web::Data<AppState>
 ) -> impl Responder {
+  println!("[info] /vote");
   if *data.election_phase.lock().unwrap() != ElectionPhase::Voting {
     let mut res = HttpResponse::new(StatusCode::BAD_REQUEST);
     res.headers_mut().insert(
       HeaderName::from_static("message"),
       HeaderValue::from_static("Election is not in Voting phase")
     );
+    println!("wrong phase");
     return res; 
   } else {
     let ballot = body.into_inner();
@@ -201,21 +207,20 @@ async fn vote(
         HeaderName::from_static("message"),
         HeaderValue::from_static("User already voted")
       );
+      println!("double vote");
       return res;
     } else {
       match (*data.user_auth.lock().unwrap()).get(&ballot.authentication.login) {
         Some(pw_hash_saved) if hash(&ballot.authentication.password) == *pw_hash_saved => {
           let vote_data = &mut *data.vote_data.lock().unwrap();
-          println!("a user voted {{");
           for shard in ballot.shards {
-            println!("{:?} -> {:?}", shard.candidateId, shard.grade);
+            println!("  {:?} -> {:?}", shard.candidateId, shard.grade);
             vote_data.update(
               shard.candidateId as usize,
               shard.grade.to_i8() as usize,
               |count| count + 1
             );
           }
-          println!("}}");
           let number_votes_cast = &mut *data.number_votes_cast.lock().unwrap();
           *number_votes_cast += 1;
           user_votes.insert(ballot.authentication.login);
@@ -232,6 +237,7 @@ async fn vote(
             HeaderName::from_static("message"),
             HeaderValue::from_static("Wrong credentials")
           ); 
+          println!("wrong credentials");
           return res;
         }
       }
@@ -245,6 +251,7 @@ async fn forward(
   body: web::Json<Authentication>,
   data: web::Data<AppState>
 ) -> impl Responder {
+  println!("[info] /forward");
   let auth = body.into_inner();
   let pw_hash = hash(&auth.password);
   if auth.login == *data.admin_login && data.admin_pw_hash == pw_hash {
@@ -254,8 +261,10 @@ async fn forward(
       ElectionPhase::Voting => {
         *phase = ElectionPhase::Results;
         let number_votes_cast = *data.number_votes_cast.lock().unwrap();
-        *data.vote_results.lock().unwrap() =
-          major::compute_results(&*data.vote_data.lock().unwrap(), number_votes_cast); 
+        if number_votes_cast > 0 {
+          *data.vote_results.lock().unwrap() =
+            major::compute_results(&*data.vote_data.lock().unwrap(), number_votes_cast); 
+        }
       },
       _ => ()
     };
@@ -266,6 +275,7 @@ async fn forward(
       HeaderName::from_static("message"),
       HeaderValue::from_static("Wrong admin credentials")
     );
+    println!("wrong credentials");
     return res; 
   }
 }
@@ -276,6 +286,7 @@ async fn users(
   body: web::Json<Authentication>,
   data: web::Data<AppState>
 ) -> impl Responder {
+  println!("[info] /users");
   let auth = body.into_inner();
   let pw_hash = hash(&auth.password);
   if auth.login == *data.admin_login && data.admin_pw_hash == pw_hash {
@@ -300,6 +311,7 @@ async fn users(
       HeaderName::from_static("message"),
       HeaderValue::from_static("Wrong admin credentials")
     );
+    println!("wrong credentials");
     return res; 
   }
 }

@@ -6,7 +6,7 @@ import 'package:major_client/util/unit.dart';
 class ResultsPage extends StatelessWidget {
   final AppState appState;
 
-  ResultsPage(this.appState);
+  const ResultsPage(this.appState);
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +23,7 @@ class ResultsPage extends StatelessWidget {
     Widget? crownIfWinner() {
       if (handlingWinner) {
         handlingWinner = false;
-        return Icon(
+        return const Icon(
           Icons.check_circle_outline_rounded,
           color: Colors.green
         );
@@ -33,7 +33,7 @@ class ResultsPage extends StatelessWidget {
     }
 
     Widget participationWidget = Padding(
-      padding: EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(8.0),
       child: Center(
         child: Text('Participation: ${info.participation!.toStringAsFixed(2)}%')
       )
@@ -63,13 +63,13 @@ class ResultsPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Results phase'),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_rounded),
+          icon: const Icon(Icons.arrow_back_rounded),
           onPressed: () { Navigator.pop(context, Unit()); }
         )
       ),
       body: Center(
         child: Padding(
-          padding: EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(8.0),
           child: ListView(
             children: resultWidgets
           )

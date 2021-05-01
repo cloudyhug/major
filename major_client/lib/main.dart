@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:major_client/app_state.dart';
 import 'package:major_client/http_service.dart';
-import 'pages/home.dart';
-import 'pages/register.dart';
-import 'pages/voting.dart';
-import 'pages/results.dart';
+import 'package:major_client/pages/home.dart';
+import 'package:major_client/pages/info.dart';
+import 'package:major_client/pages/register.dart';
+import 'package:major_client/pages/results.dart';
+import 'package:major_client/pages/voting.dart';
 
 void main() {
   runApp(MyApp());
@@ -18,7 +19,7 @@ class MyApp extends StatelessWidget {
       httpService: HttpService()
     );
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Major',
       theme: ThemeData(
         primarySwatch: Colors.blueGrey
       ),
@@ -27,7 +28,8 @@ class MyApp extends StatelessWidget {
         '/': (context) => HomePage(appState),
         '/register': (context) => RegisterPage(appState),
         '/voting': (context) => VotingPage(appState),
-        '/results': (context) => ResultsPage(appState)
+        '/results': (context) => ResultsPage(appState),
+        '/info': (context) => InfoPage()
       }
     );
   }
