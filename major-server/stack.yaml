@@ -1,0 +1,11 @@
+resolver:
+  url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/18/24.yaml
+
+packages:
+- .
+
+allow-newer: true
+
+extra-deps: 
+  - git: https://github.com/haskell-hvr/missingh.git
+    commit: 2ff460c54aba86b7f5b6413af977c7044eac559c

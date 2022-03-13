@@ -1,0 +1,200 @@
+POST http://localhost:8000/connect HTTP/1.1
+Content-Type: application/json
+
+{
+  "login": "toto",
+  "password": "otot",
+  "clientID": "toto-mobile"
+}
+
+# 401 invalid session
+
+###
+
+POST http://localhost:8000/connect HTTP/1.1
+Content-Type: application/json
+
+{
+  "login": "toto",
+  "password": "",
+  "clientID": "toto-mobile"
+}
+
+# 401 unacceptable credentials
+
+###
+
+POST http://localhost:8000/register HTTP/1.1
+Content-Type: application/json
+
+{
+  "login": "toto",
+  "password": "",
+  "clientID": "toto-mobile"
+}
+
+# 401 unacceptable credentials
+
+###
+
+POST http://localhost:8000/register HTTP/1.1
+Content-Type: application/json
+
+{
+  "login": "toto",
+  "password": "otot",
+  "clientID": "toto-mobile"
+}
+
+# 200
+
+###
+
+POST http://localhost:8000/register HTTP/1.1
+Content-Type: application/json
+
+{
+  "login": "toto",
+  "password": "otot",
+  "clientID": "toto-mobile"
+}
+
+# 403 already registered
+
+###
+
+POST http://localhost:8000/connect HTTP/1.1
+Content-Type: application/json
+
+{
+  "login": "toto",
+  "password": "oto",
+  "clientID": "toto-mobile"
+}
+
+# 401 invalid credentials
+
+###
+
+POST http://localhost:8000/connect HTTP/1.1
+Content-Type: application/json
+
+{
+  "login": "toto",
+  "password": "otot",
+  "clientID": "toto-mobile"
+}
+
+# ok accesstoken refreshtoken
+
+###
+
+GET http://localhost:8000/refreshToken HTTP/1.1
+Content-Type: text/plain
+
+toto
+
+# 401 bad refresh token
+
+###
+
+# for next one, put as body the refresh token given above in the successful call to connect
+
+GET http://localhost:8000/refreshToken HTTP/1.1
+Content-Type: text/plain
+
+
+
+###
+
+GET http://localhost:8000/elections HTTP/1.1
+accessToken: toot
+
+# 401 invalid token
+
+###
+
+# here put a valid token in accessToken field (through the last refreshToken call)
+
+GET http://localhost:8000/elections HTTP/1.1
+accessToken: 
+
+# 200 JSON with election data
+
+###
+
+GET http://localhost:8000/electionInfo/0 HTTP/1.1
+accessToken: toot
+
+# 401 invalid token
+
+###
+
+# put valid token here
+
+GET http://localhost:8000/electionInfo/404 HTTP/1.1
+accessToken: 
+
+# 404 election not found
+
+###
+
+# put valid token here
+
+GET http://localhost:8000/electionInfo/0 HTTP/1.1
+accessToken: 
+
+# 200 election info
+
+###
+
+GET http://localhost:8000/electionResults/0 HTTP/1.1
+accessToken: toto
+
+# 401 bad token
+
+###
+
+# put valid token
+
+GET http://localhost:8000/electionResults/404 HTTP/1.1
+accessToken: 
+
+# 404 election not found
+
+###
+
+# put valid token
+
+GET http://localhost:8000/electionResults/0 HTTP/1.1
+accessToken: 
+
+###
+
+# put valid token
+
+POST http://localhost:8000/vote/0 HTTP/1.1
+accessToken: 
+Content-Type: application/json
+
+[
+  { id: 0, rating: 0 },
+  { id: 1, rating: 2 },
+  { id: 2, rating: 4 },
+  { id: 3, rating: 1 },
+  { id: 4, rating: 3 },
+  { id: 5, rating: 6 },
+  { id: 6, rating: 6 },
+  { id: 7, rating: 1 },
+  { id: 8, rating: 2 },
+  { id: 9, rating: 5 },
+  { id: 10, rating: 0 },
+  { id: 11, rating: 5 }
+]
+
+###
+
+POST http://localhost:8000/admin/end/0 HTTP/1.1
+accessToken: 42
+
+###
