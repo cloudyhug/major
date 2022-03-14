@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.launcher.LauncherActivity">
+
+    <ImageView
+        android:id="@+id/iv_logo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@null"
+        android:src="@drawable/ic_logo_64"
+        app:layout_constraintBottom_toTopOf="@id/tv_major"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+    <TextView
+        android:id="@+id/tv_major"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="50dp"
+        android:gravity="center"
+        android:text="@string/activity_launcher_major"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@id/layout_ti_login"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/iv_logo"
+        app:layout_constraintWidth_max="250dp" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/layout_ti_login"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:gravity="center"
+        android:hint="@string/activity_launcher_login_hint"
+        app:boxStrokeColor="@color/outlined_edit_text_selector"
+        app:layout_constraintBottom_toTopOf="@id/layout_ti_password"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_major"
+        app:layout_constraintWidth_max="250dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edit_ti_login"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:importantForAutofill="no"
+            android:inputType="text" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/layout_ti_password"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:gravity="center"
+        app:boxStrokeColor="@color/outlined_edit_text_selector"
+        app:layout_constraintBottom_toTopOf="@id/btn_send"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/layout_ti_login"
+        app:layout_constraintWidth_max="250dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edit_ti_password"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:hint="@string/activity_launcher_pass_hint"
+            android:importantForAutofill="no"
+            android:inputType="textPassword"
+            android:letterSpacing="0.15" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <br.com.simplepass.loadingbutton.customViews.CircularProgressButton
+        android:id="@+id/btn_send"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="75dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="75dp"
+        android:background="@drawable/button_shape_default"
+        android:backgroundTint="?attr/colorPrimary"
+        android:clickable="true"
+        android:clipToPadding="false"
+        android:elevation="2dp"
+        android:fontFamily="@font/cera_pro_medium"
+        android:gravity="center"
+        android:padding="12dp"
+        android:text="@string/activity_launcher_send"
+        android:textAllCaps="true"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        app:finalCornerAngle="1000dp"
+        app:initialCornerAngle="4dp"
+        app:layout_constraintBottom_toTopOf="@id/tv_no_account"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/layout_ti_password"
+        app:layout_constraintWidth_max="250dp"
+        app:spinning_bar_color="@color/white"
+        app:spinning_bar_padding="@dimen/enovap_button_spinning_bar_padding"
+        app:spinning_bar_width="@dimen/enovap_button_spinning_bar_width" />
+
+    <TextView
+        android:id="@+id/tv_no_account"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="18dp"
+        android:layout_marginEnd="50dp"
+        android:fontFamily="@font/cera_pro_medium"
+        android:gravity="center"
+        android:padding="4dp"
+        android:text="@string/activity_launcher_no_account"
+        android:textColor="?attr/colorPrimary"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btn_send"
+        app:layout_constraintWidth_max="250dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

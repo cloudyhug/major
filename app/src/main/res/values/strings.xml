@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">Major</string>
+
+    <!-- Misc strings -->
+    <string name="ok_label">OK</string>
+    <string name="log_in_label">Log in</string>
+    <string name="sign_up_label">Sign up</string>
+
+    <!-- Launcher Activity strings -->
+    <string name="activity_launcher_major">@string/app_name</string>
+    <string name="activity_launcher_login_hint">Login</string>
+    <string name="activity_launcher_pass_hint">Password</string>
+    <string name="activity_launcher_send">@string/log_in_label</string>
+    <string name="activity_launcher_no_account">No account? Register here</string>
+
+    <!-- Register dialog strings -->
+    <string name="dialog_register_title">Register your account</string>
+    <string name="dialog_register_send">@string/sign_up_label</string>
+
+</resources>

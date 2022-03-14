@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Progress button spinning bar dimens -->
+    <dimen name="enovap_button_spinning_bar_width">4dp</dimen>
+    <dimen name="enovap_button_spinning_bar_padding">8dp</dimen>
+
+</resources>
