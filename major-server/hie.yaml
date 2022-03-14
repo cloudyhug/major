@@ -1,0 +1,13 @@
+cradle:
+  stack:
+    - path: "./src"
+      component: "major-server:lib"
+
+    - path: "./app/Main.hs"
+      component: "major-server:exe:major-server-exe"
+
+    - path: "./app/Paths_major_server.hs"
+      component: "major-server:exe:major-server-exe"
+
+    - path: "./test"
+      component: "major-server:test:major-server-test"
