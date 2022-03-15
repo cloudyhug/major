@@ -18,7 +18,7 @@ dependencies:
 - MissingH
 - bytestring
 - extra
-- postgresql-simple
+# - postgresql-simple
 - resource-pool
 - containers
 - wai
