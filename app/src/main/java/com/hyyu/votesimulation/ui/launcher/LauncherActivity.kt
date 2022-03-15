@@ -2,7 +2,6 @@ package com.hyyu.votesimulation.ui.launcher
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -13,7 +12,7 @@ import com.google.android.material.textfield.TextInputLayout
 import com.hyyu.votesimulation.databinding.ActivityLauncherBinding
 import com.hyyu.votesimulation.network.body.CredentialsObjectBody
 import com.hyyu.votesimulation.network.response.ConnectionObjectResponse
-import com.hyyu.votesimulation.network.response.EmptyObjectResponse
+import com.hyyu.votesimulation.network.response.RegisterObjectResponse
 import com.hyyu.votesimulation.ui.main.MainActivity
 import com.hyyu.votesimulation.util.const.AnimationConst
 import com.hyyu.votesimulation.util.state.DataState
@@ -49,7 +48,7 @@ class LauncherActivity : AppCompatActivity() {
                 val login = binding.editTiLogin.value
                 val password = binding.editTiPassword.value
 
-                viewModel.credentialsBody = CredentialsObjectBody(login, password)
+                viewModel.credentialsBody = CredentialsObjectBody(login, password, "")
 
                 when (viewModel.validateCredentials(viewModel.credentialsBody)) {
                     LauncherViewModel.ValidatorCode.LOGIN_NOT_VALID -> displayErrorOnTIL(binding.layoutTiLogin,"Login must be valid")
@@ -125,7 +124,7 @@ class LauncherActivity : AppCompatActivity() {
 
         viewModel.registerDataState.observe(this) { dataState ->
             when (dataState) {
-                is DataState.Success<EmptyObjectResponse> -> {
+                is DataState.Success<RegisterObjectResponse> -> {
                     SimpleHandler.postDelayed({
                         viewModel.setStateEvent(LauncherStateEvent.ConnectEvent)
                     }, AnimationConst.HANDLER_DELAY_SHORT)

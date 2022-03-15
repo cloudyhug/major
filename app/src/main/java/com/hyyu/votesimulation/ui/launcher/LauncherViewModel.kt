@@ -3,7 +3,7 @@ package com.hyyu.votesimulation.ui.launcher
 import androidx.lifecycle.*
 import com.hyyu.votesimulation.network.body.CredentialsObjectBody
 import com.hyyu.votesimulation.network.response.ConnectionObjectResponse
-import com.hyyu.votesimulation.network.response.EmptyObjectResponse
+import com.hyyu.votesimulation.network.response.RegisterObjectResponse
 import com.hyyu.votesimulation.repository.MainRepository
 import com.hyyu.votesimulation.util.state.DataState
 import com.hyyu.votesimulation.util.extension.isValidLogin
@@ -25,8 +25,8 @@ class LauncherViewModel
     }
 
     /* LiveData associated to user's registering */
-    private val _registerDataState: MutableLiveData<DataState<EmptyObjectResponse>> = MutableLiveData()
-    val registerDataState: LiveData<DataState<EmptyObjectResponse>>
+    private val _registerDataState: MutableLiveData<DataState<RegisterObjectResponse>> = MutableLiveData()
+    val registerDataState: LiveData<DataState<RegisterObjectResponse>>
         get() = _registerDataState
 
     /* LiveData associated to user's connection */

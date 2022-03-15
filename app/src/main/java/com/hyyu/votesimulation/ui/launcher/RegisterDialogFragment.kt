@@ -71,7 +71,7 @@ class RegisterDialogFragment : DialogFragment() {
                 val login = binding.editTiLogin.value
                 val password = binding.editTiPassword.value
 
-                vm.credentialsBody = CredentialsObjectBody(login, password)
+                vm.credentialsBody = CredentialsObjectBody(login, password, "")
 
                 when (vm.validateCredentials(vm.credentialsBody)) {
                     LauncherViewModel.ValidatorCode.LOGIN_NOT_VALID -> displayErrorOnTIL(

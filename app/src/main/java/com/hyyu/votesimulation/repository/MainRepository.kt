@@ -8,7 +8,7 @@ import com.hyyu.votesimulation.network.MajorApi
 import com.hyyu.votesimulation.network.BlogMapper
 import com.hyyu.votesimulation.network.body.CredentialsObjectBody
 import com.hyyu.votesimulation.network.response.ConnectionObjectResponse
-import com.hyyu.votesimulation.network.response.EmptyObjectResponse
+import com.hyyu.votesimulation.network.response.RegisterObjectResponse
 import com.hyyu.votesimulation.prefs.Session
 import com.hyyu.votesimulation.util.state.DataState
 import kotlinx.coroutines.delay
@@ -50,13 +50,12 @@ constructor(
         }
     }
 
-    suspend fun registerNewUserAccount(body: CredentialsObjectBody): Flow<DataState<EmptyObjectResponse>> = flow {
+    suspend fun registerNewUserAccount(body: CredentialsObjectBody): Flow<DataState<RegisterObjectResponse>> = flow {
         emit(DataState.Loading)
         delay(1000)
         try {
-            Log.v(TAG, "sending register request")
-            val registerResponse = majorApi.register(body.login, body.password, sessionPrefs.deviceName!!)
-            Log.v(TAG, "response: $registerResponse")
+            body.clientId = sessionPrefs.deviceName!!
+            val registerResponse = majorApi.register(body)
             emit(DataState.Success(registerResponse))
         } catch (e: Exception) {
             Log.v(TAG, "error: ${e.message}")
