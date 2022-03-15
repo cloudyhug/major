@@ -20,6 +20,7 @@ object AppDependencies {
     /* Retrofit */
     private const val retrofit = "${Dependencies.retrofit}:${Versions.retrofit}"
     private const val retrofitGson = "${Dependencies.retrofitGson}:${Versions.retrofitGson}"
+    private const val loggingInterceptor = "${Dependencies.loggingInterceptor}:${Versions.loggingInterceptor}"
 
     /* Room */
     private const val roomCompiler = "${Dependencies.roomCompiler}:${Versions.roomCompiler}"
@@ -75,6 +76,7 @@ object AppDependencies {
         add(lifeCycleExtensions)
         add(lifecycleLiveDataKtx)
         add(lifecycleViewModelKtx)
+        add(loggingInterceptor)
         add(material)
         add(preference)
         add(retrofit)

@@ -32,6 +32,7 @@ object Versions {
     const val lifeCycleExtensions = "2.2.0"
     const val lifecycleLiveDataKtx = "2.4.1"
     const val lifecycleViewModelKtx = "2.4.1"
+    const val loggingInterceptor = "3.8.0"
     const val material = "1.5.0"
     const val preference = "1.1.1"
     const val retrofit = "2.9.0"

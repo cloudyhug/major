@@ -25,6 +25,7 @@ object Dependencies {
     const val lifeCycleExtensions = "androidx.lifecycle:lifecycle-extensions"
     const val lifecycleLiveDataKtx = "androidx.lifecycle:lifecycle-livedata-ktx"
     const val lifecycleViewModelKtx = "androidx.lifecycle:lifecycle-viewmodel-ktx"
+    const val loggingInterceptor = "com.squareup.okhttp3:logging-interceptor"
     const val material = "com.google.android.material:material"
     const val preference = "androidx.preference:preference-ktx"
     const val roomCompiler = "androidx.room:room-compiler"
