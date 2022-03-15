@@ -33,5 +33,6 @@ object Dependencies {
     const val retrofitGson = "com.squareup.retrofit2:converter-gson"
     const val roomKtx = "androidx.room:room-ktx"
     const val roomRuntime = "androidx.room:room-runtime"
+    const val scalars = "com.squareup.retrofit2:converter-scalars"
     const val swipeRefreshLayout = "androidx.swiperefreshlayout:swiperefreshlayout"
 }

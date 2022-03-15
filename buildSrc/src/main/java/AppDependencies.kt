@@ -21,6 +21,7 @@ object AppDependencies {
     private const val retrofit = "${Dependencies.retrofit}:${Versions.retrofit}"
     private const val retrofitGson = "${Dependencies.retrofitGson}:${Versions.retrofitGson}"
     private const val loggingInterceptor = "${Dependencies.loggingInterceptor}:${Versions.loggingInterceptor}"
+    private const val scalars = "${Dependencies.scalars}:${Versions.scalars}"
 
     /* Room */
     private const val roomCompiler = "${Dependencies.roomCompiler}:${Versions.roomCompiler}"
@@ -31,7 +32,7 @@ object AppDependencies {
     private const val preference = "${Dependencies.preference}:${Versions.preference}"
 
     /* Android UI */
-    private const val activtyKtx = "${Dependencies.activtyKtx}:${Versions.activityKtx}"
+    private const val activityKtx = "${Dependencies.activtyKtx}:${Versions.activityKtx}"
     private const val appcompat = "${Dependencies.appcompat}:${Versions.appcompat}"
     private const val constraintLayout = "${Dependencies.constraintLayout}:${Versions.constraintLayout}"
     private const val coreKtx = "${Dependencies.coreKtx}:${Versions.coreKtx}"
@@ -62,7 +63,7 @@ object AppDependencies {
     private const val hiltTestCompilerAndroidX = "${Dependencies.hiltTestCompilerAndroidX}:${Versions.hiltTestCompilerAndroidX}"
 
     val appLibraries = arrayListOf<String>().apply {
-        add(activtyKtx)
+        add(activityKtx)
         add(appcompat)
         add(circularProgressButton)
         add(constraintLayout)
@@ -83,6 +84,7 @@ object AppDependencies {
         add(retrofitGson)
         add(roomKtx)
         add(roomRuntime)
+        add(scalars)
         add(swipeRefreshLayout)
     }
 

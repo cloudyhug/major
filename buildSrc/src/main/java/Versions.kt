@@ -40,6 +40,7 @@ object Versions {
     const val roomKtx = "2.4.1"
     const val roomRuntime = "2.4.1"
     const val roomCompiler = "2.4.1"
+    const val scalars = "2.1.0"
     const val swiperefreshLayout = "1.1.0"
 
 }
