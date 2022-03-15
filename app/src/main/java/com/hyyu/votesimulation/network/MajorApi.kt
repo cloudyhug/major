@@ -3,6 +3,7 @@ package com.hyyu.votesimulation.network
 import com.hyyu.votesimulation.network.body.CredentialsObjectBody
 import com.hyyu.votesimulation.network.response.ConnectionObjectResponse
 import com.hyyu.votesimulation.network.response.RegisterObjectResponse
+import retrofit2.Call
 import retrofit2.http.*
 
 interface MajorApi {
@@ -20,11 +21,11 @@ interface MajorApi {
         @Field("login") login: String,
         @Field("password") password: String,
         @Field("clientId") deviceName: String
-    ): ConnectionObjectResponse
+    ): Call<ConnectionObjectResponse>
 
     @POST(REGISTER)
     suspend fun register(
         @Body credentials: CredentialsObjectBody
-    ): RegisterObjectResponse
+    ): Call<RegisterObjectResponse>
 
 }
