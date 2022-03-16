@@ -8,7 +8,6 @@ import androidx.fragment.app.DialogFragment
 import com.google.android.material.textfield.TextInputLayout
 import com.hyyu.votesimulation.R
 import com.hyyu.votesimulation.databinding.DialogRegisterBinding
-import com.hyyu.votesimulation.network.body.CredentialsObjectBody
 import com.hyyu.votesimulation.util.const.AnimationConst
 import com.hyyu.votesimulation.util.extension.*
 import com.hyyu.votesimulation.util.handler.SimpleHandler
@@ -56,7 +55,7 @@ class RegisterDialogFragment : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setupImeKeyboard()
+        setupImeKeyboardParams()
 
         binding.toolbar.setNavigationOnClickListener {
             dismiss()
@@ -64,14 +63,13 @@ class RegisterDialogFragment : DialogFragment() {
 
         binding.btnSend.setOnClickListener {
             it.bounce {
-                hideImeKeyboard(requireActivity(), view.rootView.windowToken)
                 clearErrorsOnInputs()
 
                 val vm = (requireActivity() as LauncherActivity).viewModel
                 val login = binding.editTiLogin.value
                 val password = binding.editTiPassword.value
 
-                vm.credentialsBody = CredentialsObjectBody(login, password, "")
+                vm.credentialsBody = vm.createCredentials(login, password)
 
                 when (vm.validateCredentials(vm.credentialsBody)) {
                     LauncherViewModel.ValidatorCode.LOGIN_NOT_VALID -> displayErrorOnTIL(
@@ -114,11 +112,25 @@ class RegisterDialogFragment : DialogFragment() {
         til.isErrorEnabled = true
     }
 
-    private fun setupImeKeyboard() {
+    private fun setupImeKeyboardParams() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
             requireActivity().window?.setDecorFitsSystemWindows(false)
         else
             requireActivity().window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+
+        binding.editTiLogin.setOnFocusChangeListener { v, isFocused ->
+            if (isFocused)
+                showImeKeyboard(requireActivity(), v)
+            else
+                hideImeKeyboard(requireActivity(), binding.root.windowToken)
+        }
+
+        binding.editTiPassword.setOnFocusChangeListener { v, isFocused ->
+            if (isFocused)
+                showImeKeyboard(requireActivity(), v)
+            else
+                hideImeKeyboard(requireActivity(), binding.root.windowToken)
+        }
 
         SimpleHandler.postDelayed({
             showImeKeyboard(requireActivity(), binding.editTiLogin)
