@@ -46,6 +46,7 @@ class LauncherActivity : AppCompatActivity() {
         binding = ActivityLauncherBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        launchMainActivityIfAccessTokenIsNotNull()
         setupInitialState()
 
         binding.btnSend.setOnClickListener {
@@ -65,6 +66,14 @@ class LauncherActivity : AppCompatActivity() {
             }
         }
 
+    }
+
+    private fun launchMainActivityIfAccessTokenIsNotNull() {
+        val token = viewModel.getLocalAccessToken()
+        if (token != null) {
+            startActivity(Intent(this, MainActivity::class.java))
+            finish()
+        }
     }
 
     private fun setupInitialState() {
