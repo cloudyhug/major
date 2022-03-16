@@ -8,15 +8,11 @@ import com.hyyu.votesimulation.network.MajorApi
 import com.hyyu.votesimulation.network.BlogMapper
 import com.hyyu.votesimulation.network.body.CredentialsObjectBody
 import com.hyyu.votesimulation.network.response.ConnectionObjectResponse
-import com.hyyu.votesimulation.network.response.RegisterObjectResponse
 import com.hyyu.votesimulation.prefs.Session
 import com.hyyu.votesimulation.util.state.DataState
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.withContext
-import kotlin.random.Random
 
 @Suppress("BlockingMethodInNonBlockingContext")
 class MainRepository
@@ -32,9 +28,15 @@ constructor(
         val TAG: String = MainRepository::class.java.simpleName
     }
 
+    val deviceName: String?
+        get() = sessionPrefs.deviceName
+
+    val accessToken: String?
+        get() = sessionPrefs.accessToken
+
     init {
         if (sessionPrefs.deviceName.isNullOrEmpty()) {
-            sessionPrefs.deviceName = "${Build.MANUFACTURER}-${Build.MODEL} ${Random.nextInt(10000)}"
+            sessionPrefs.deviceName = "${Build.MANUFACTURER}-${Build.MODEL} ${System.currentTimeMillis()}"
         }
     }
 
@@ -42,36 +44,32 @@ constructor(
         emit(DataState.Loading)
         delay(1000)
         try {
-            val connectionResponse = withContext(Dispatchers.IO) {
+            body.clientId = sessionPrefs.deviceName!!
+            Log.v(TAG, "${MajorApi.BASE_URL}${MajorApi.CONNECT}: body: $body")
+            val connectionResponse =
                 majorApi.connect(
-                    body.login,
-                    body.password,
-                    sessionPrefs.deviceName!!
-                ).execute().body()
-                    ?.apply {
-                        sessionPrefs.accessToken = accessToken
-                        sessionPrefs.refreshToken = refreshToken
-                        emit(DataState.Success(this))
-                    } ?: throw Exception("Request body is null")
-            }
+                    body
+                ).apply {
+                    sessionPrefs.accessToken = accessToken
+                    sessionPrefs.refreshToken = refreshToken
+                    emit(DataState.Success(this))
+                }
         } catch (e: Exception) {
+            Log.e(TAG, "error: ${e.message}")
             emit(DataState.Error(e))
         }
     }
 
-    suspend fun registerNewUserAccount(body: CredentialsObjectBody): Flow<DataState<RegisterObjectResponse>> = flow {
+    suspend fun registerNewUserAccount(body: CredentialsObjectBody): Flow<DataState<Unit>> = flow {
         emit(DataState.Loading)
         delay(1000)
         try {
             body.clientId = sessionPrefs.deviceName!!
-            Log.v(TAG, "body: $body")
-            val registerResponse = withContext(Dispatchers.IO) { majorApi.register(body).execute().body()
-                ?.apply {
-                    emit(DataState.Success(this ))
-                } ?: throw Exception("Request body is null")
-            }
+            Log.v(TAG, "${MajorApi.BASE_URL}${MajorApi.REGISTER}: body: $body")
+            val registerResponse = majorApi.register(body)
+                .apply { emit(DataState.Success(Unit)) }
         } catch (e: Exception) {
-            Log.v(TAG, "error: ${e.message}")
+            Log.e(TAG, "error: ${e.message}")
             emit(DataState.Error(e))
         }
     }
