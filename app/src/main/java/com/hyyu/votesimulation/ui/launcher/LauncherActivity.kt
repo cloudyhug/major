@@ -1,8 +1,14 @@
 package com.hyyu.votesimulation.ui.launcher
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
+import android.view.KeyEvent
 import android.view.View
+import android.view.WindowManager
+import android.view.inputmethod.EditorInfo
+import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentTransaction
@@ -12,11 +18,12 @@ import com.google.android.material.textfield.TextInputLayout
 import com.hyyu.votesimulation.databinding.ActivityLauncherBinding
 import com.hyyu.votesimulation.network.body.CredentialsObjectBody
 import com.hyyu.votesimulation.network.response.ConnectionObjectResponse
-import com.hyyu.votesimulation.network.response.RegisterObjectResponse
 import com.hyyu.votesimulation.ui.main.MainActivity
 import com.hyyu.votesimulation.util.const.AnimationConst
 import com.hyyu.votesimulation.util.state.DataState
 import com.hyyu.votesimulation.util.extension.bounce
+import com.hyyu.votesimulation.util.extension.hideImeKeyboard
+import com.hyyu.votesimulation.util.extension.showImeKeyboard
 import com.hyyu.votesimulation.util.extension.value
 import com.hyyu.votesimulation.util.handler.SimpleHandler
 import dagger.hilt.android.AndroidEntryPoint
@@ -48,15 +55,7 @@ class LauncherActivity : AppCompatActivity() {
                 val login = binding.editTiLogin.value
                 val password = binding.editTiPassword.value
 
-                viewModel.credentialsBody = CredentialsObjectBody(login, password, "")
-
-                when (viewModel.validateCredentials(viewModel.credentialsBody)) {
-                    LauncherViewModel.ValidatorCode.LOGIN_NOT_VALID -> displayErrorOnTIL(binding.layoutTiLogin,"Login must be valid")
-                    LauncherViewModel.ValidatorCode.PASSWORD_NOT_VALID -> displayErrorOnTIL(binding.layoutTiPassword, "Password mustn't be empty")
-                    else -> {
-                        viewModel.setStateEvent(LauncherStateEvent.ConnectEvent)
-                    }
-                }
+                sendConnectionRequest(login, password)
             }
         }
 
@@ -69,6 +68,7 @@ class LauncherActivity : AppCompatActivity() {
     }
 
     private fun setupInitialState() {
+        setupImeKeyboardParams()
         clearErrorsOnInputs()
         subscribeObservers()
     }
@@ -101,6 +101,18 @@ class LauncherActivity : AppCompatActivity() {
         }
     }
 
+    private fun sendConnectionRequest(login: String, password: String) {
+        viewModel.credentialsBody = viewModel.createCredentials(login, password)
+
+        when (viewModel.validateCredentials(viewModel.credentialsBody)) {
+            LauncherViewModel.ValidatorCode.LOGIN_NOT_VALID -> displayErrorOnTIL(binding.layoutTiLogin,"Login must be valid")
+            LauncherViewModel.ValidatorCode.PASSWORD_NOT_VALID -> displayErrorOnTIL(binding.layoutTiPassword, "Password mustn't be empty")
+            else -> {
+                viewModel.setStateEvent(LauncherStateEvent.ConnectEvent)
+            }
+        }
+    }
+
     /* Observer on the dataSate liveData  */
 
     private fun subscribeObservers() {
@@ -112,19 +124,23 @@ class LauncherActivity : AppCompatActivity() {
                     finish()
                 }
                 is DataState.Loading -> {
-                    if (registerDialog?.showsDialog!!)
-                    binding.btnSend.startAnimation()
+                    if (registerDialog?.showsDialog != true)
+                        binding.btnSend.startAnimation()
                 }
                 is DataState.Error -> {
                     binding.btnSend.revertAnimation()
-                    displayErrorOnSnackbar(binding.root, dataState.exception.message)
+                    if (registerDialog?.showsDialog == true) {
+                        displayErrorOnSnackbar(registerDialog?.getRootLayout()!!, dataState.exception.message)
+                    } else {
+                        displayErrorOnSnackbar(binding.root, dataState.exception.message)
+                    }
                 }
             }
         }
 
         viewModel.registerDataState.observe(this) { dataState ->
             when (dataState) {
-                is DataState.Success<RegisterObjectResponse> -> {
+                is DataState.Success<Unit> -> {
                     SimpleHandler.postDelayed({
                         viewModel.setStateEvent(LauncherStateEvent.ConnectEvent)
                     }, AnimationConst.HANDLER_DELAY_SHORT)
@@ -139,6 +155,41 @@ class LauncherActivity : AppCompatActivity() {
                     }
                 }
             }
+        }
+    }
+
+    private fun setupImeKeyboardParams() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
+            window?.setDecorFitsSystemWindows(false)
+        else
+            window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+
+        binding.editTiLogin.setOnFocusChangeListener { v, isFocused ->
+            if (isFocused)
+                showImeKeyboard(this, v)
+            else
+                hideImeKeyboard(this, binding.root.windowToken)
+        }
+
+        binding.editTiPassword.setOnFocusChangeListener { v, isFocused ->
+            if (isFocused)
+                showImeKeyboard(this, v)
+            else
+                hideImeKeyboard(this, binding.root.windowToken)
+        }
+
+        binding.editTiPassword.setOnEditorActionListener { _, id, event ->
+            if (id == EditorInfo.IME_ACTION_DONE) {
+                hideImeKeyboard(this, binding.root.windowToken)
+                clearErrorsOnInputs()
+
+                val login = binding.editTiLogin.value
+                val password = binding.editTiPassword.value
+
+                sendConnectionRequest(login, password)
+                return@setOnEditorActionListener true
+            }
+            return@setOnEditorActionListener false
         }
     }
 
