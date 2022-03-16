@@ -34,4 +34,9 @@ class Session {
                 .apply()
         }
 
+    fun clear() {
+        mPrefs.edit().clear()
+            .apply()
+    }
+
 }
