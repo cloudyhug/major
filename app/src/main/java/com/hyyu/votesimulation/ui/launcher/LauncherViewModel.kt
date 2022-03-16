@@ -1,9 +1,9 @@
 package com.hyyu.votesimulation.ui.launcher
 
+import android.util.Log
 import androidx.lifecycle.*
 import com.hyyu.votesimulation.network.body.CredentialsObjectBody
 import com.hyyu.votesimulation.network.response.ConnectionObjectResponse
-import com.hyyu.votesimulation.network.response.RegisterObjectResponse
 import com.hyyu.votesimulation.repository.MainRepository
 import com.hyyu.votesimulation.util.state.DataState
 import com.hyyu.votesimulation.util.extension.isValidLogin
@@ -25,8 +25,8 @@ class LauncherViewModel
     }
 
     /* LiveData associated to user's registering */
-    private val _registerDataState: MutableLiveData<DataState<RegisterObjectResponse>> = MutableLiveData()
-    val registerDataState: LiveData<DataState<RegisterObjectResponse>>
+    private val _registerDataState: MutableLiveData<DataState<Unit>> = MutableLiveData()
+    val registerDataState: LiveData<DataState<Unit>>
         get() = _registerDataState
 
     /* LiveData associated to user's connection */
@@ -76,6 +76,9 @@ class LauncherViewModel
             }
         }
     }
+
+    fun createCredentials(login: String, password: String) = CredentialsObjectBody(login, password, mainRepository.deviceName!!)
+    fun getLocalAccessToken() = mainRepository.accessToken
 
 }
 
