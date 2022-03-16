@@ -4,7 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.launcher.LauncherActivity">
+    tools:context=".ui.launcher.LauncherActivity"
+    android:clickable="true"
+    android:focusableInTouchMode="true"
+    >
 
     <ImageView
         android:id="@+id/iv_logo"
@@ -105,7 +108,7 @@
         android:textSize="18sp"
         app:finalCornerAngle="1000dp"
         app:initialCornerAngle="4dp"
-        app:layout_constraintBottom_toTopOf="@id/tv_no_account"
+        app:layout_constraintBottom_toBottomOf="@id/tv_no_account"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/layout_ti_password"
