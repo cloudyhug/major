@@ -24,9 +24,8 @@ fun getSoftKeyboardWithFocusOnView(context: Context, view: View): InputMethodMan
  */
 @Utils
 fun showImeKeyboard(context: Context, view: View) {
-    val imm = getSoftKeyboardWithFocusOnView(context, view)
-    imm?.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT)
-        ?: Log.e("ImeKeyboard", "Imm is null")
+    val imm = getSoftKeyboard(context)
+    imm.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT)
 }
 
 /**
