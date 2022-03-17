@@ -118,22 +118,8 @@ class RegisterDialogFragment : DialogFragment() {
         else
             requireActivity().window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
 
-        binding.editTiLogin.setOnFocusChangeListener { v, isFocused ->
-            if (isFocused)
-                showImeKeyboard(requireActivity(), v)
-            else
-                hideImeKeyboard(requireActivity(), binding.root.windowToken)
-        }
-
-        binding.editTiPassword.setOnFocusChangeListener { v, isFocused ->
-            if (isFocused)
-                showImeKeyboard(requireActivity(), v)
-            else
-                hideImeKeyboard(requireActivity(), binding.root.windowToken)
-        }
-
         SimpleHandler.postDelayed({
-            showImeKeyboard(requireActivity(), binding.editTiLogin)
+            showImeKeyboardWithFocusOnView(requireActivity(), binding.editTiLogin)
         }, AnimationConst.HANDLER_DELAY_MEDIUM)
     }
 
