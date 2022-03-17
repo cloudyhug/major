@@ -10,11 +10,9 @@ import com.hyyu.votesimulation.network.body.CredentialsObjectBody
 import com.hyyu.votesimulation.network.response.ConnectionObjectResponse
 import com.hyyu.votesimulation.prefs.Session
 import com.hyyu.votesimulation.util.state.DataState
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.withContext
 
 @Suppress("BlockingMethodInNonBlockingContext")
 class MainRepository
@@ -42,41 +40,37 @@ constructor(
         }
     }
 
-    suspend fun logInToUserAccount(body: CredentialsObjectBody): Flow<DataState<ConnectionObjectResponse>> = withContext(Dispatchers.IO) {
-        flow {
-            emit(DataState.Loading)
-            delay(1000)
-            try {
-                body.clientId = sessionPrefs.deviceName!!
-                Log.v(TAG, "${MajorApi.BASE_URL}${MajorApi.CONNECT}: body: $body")
-                val connectionResponse =
-                    majorApi.connect(
-                        body
-                    ).apply {
-                        sessionPrefs.accessToken = accessToken
-                        sessionPrefs.refreshToken = refreshToken
-                        emit(DataState.Success(this))
-                    }
-            } catch (e: Exception) {
-                Log.e(TAG, "error: ${e.message}")
-                emit(DataState.Error(e))
-            }
+    suspend fun logInToUserAccount(body: CredentialsObjectBody): Flow<DataState<ConnectionObjectResponse>> = flow {
+        emit(DataState.Loading)
+        delay(1000)
+        try {
+            body.clientId = sessionPrefs.deviceName!!
+            Log.v(TAG, "${MajorApi.BASE_URL}${MajorApi.CONNECT}: body: $body")
+            val connectionResponse =
+                majorApi.connect(
+                    body
+                ).apply {
+                    sessionPrefs.accessToken = accessToken
+                    sessionPrefs.refreshToken = refreshToken
+                    emit(DataState.Success(this))
+                }
+        } catch (e: Exception) {
+            Log.e(TAG, "error: ${e.message}")
+            emit(DataState.Error(e))
         }
     }
 
-    suspend fun registerNewUserAccount(body: CredentialsObjectBody): Flow<DataState<Unit>> = withContext(Dispatchers.IO) {
-        flow {
-            emit(DataState.Loading)
-            delay(1000)
-            try {
-                body.clientId = sessionPrefs.deviceName!!
-                Log.v(TAG, "${MajorApi.BASE_URL}${MajorApi.REGISTER}: body: $body")
-                val registerResponse = majorApi.register(body)
-                    .apply { emit(DataState.Success(Unit)) }
-            } catch (e: Exception) {
-                Log.e(TAG, "error: ${e.message}")
-                emit(DataState.Error(e))
-            }
+    suspend fun registerNewUserAccount(body: CredentialsObjectBody): Flow<DataState<Unit>> = flow {
+        emit(DataState.Loading)
+        delay(1000)
+        try {
+            body.clientId = sessionPrefs.deviceName!!
+            Log.v(TAG, "${MajorApi.BASE_URL}${MajorApi.REGISTER}: body: $body")
+            val registerResponse = majorApi.register(body)
+                .apply { emit(DataState.Success(Unit)) }
+        } catch (e: Exception) {
+            Log.e(TAG, "error: ${e.message}")
+            emit(DataState.Error(e))
         }
     }
 
