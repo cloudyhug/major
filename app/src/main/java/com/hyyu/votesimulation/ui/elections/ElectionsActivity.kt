@@ -19,28 +19,32 @@ class ElectionsActivity : AppCompatActivity() {
     val TAG: String = ElectionsActivity::class.java.simpleName
   }
 
-  val viewModel: ElectionsViewModel by viewModels()
+  // val viewModel: ElectionsViewModel by viewModels()
 
   private lateinit var binding: ActivityElectionsBinding
 
-  private var electionList: ArrayList<ElectionInfo> = emptyArray<>()
+  // private var electionList: ArrayList<ElectionInfo> = emptyArray<>()
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     binding = ActivityElectionsBinding.inflate(layoutInflater)
     setContentView(binding.root)
 
-    fillElections()
+    // fillElections()
 
+/*
     binding.rvElections.layoutManager = LinearLayoutManager(this)
     binding.rvElections.addItemDecoration(
       DividerItemDecoration(this, LinearLayoutManager.VERTICAL))
     binding.rvElections.adapter = ElectionAdapter(electionList)
+*/
   }
 
+/*
   private fun fillElections() {
     viewModel.fillElections(electionList)
   }
+*/
 }
 
 data class ElectionInfo(val id: Int, val name: String, val isRunning: Boolean)
