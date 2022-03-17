@@ -41,6 +41,8 @@ class LauncherActivity : AppCompatActivity() {
 
     private var registerDialog: RegisterDialogFragment? = null
 
+    private var focusedInput: View? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLauncherBinding.inflate(layoutInflater)
@@ -168,24 +170,22 @@ class LauncherActivity : AppCompatActivity() {
     }
 
     private fun setupImeKeyboardParams() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
-            window?.setDecorFitsSystemWindows(false)
-        else
-            window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
-
+/*
         binding.editTiLogin.setOnFocusChangeListener { v, isFocused ->
+
             if (isFocused)
-                showImeKeyboard(this, v)
+                focusedInput = v
             else
                 hideImeKeyboard(this, binding.root.windowToken)
         }
 
         binding.editTiPassword.setOnFocusChangeListener { v, isFocused ->
             if (isFocused)
-                showImeKeyboard(this, v)
+                focusedInput = v
             else
                 hideImeKeyboard(this, binding.root.windowToken)
         }
+*/
 
         binding.editTiPassword.setOnEditorActionListener { _, id, event ->
             if (id == EditorInfo.IME_ACTION_DONE) {

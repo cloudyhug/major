@@ -1,21 +1,21 @@
-# major
+# Major Android App
 
 ## Description
 
-This is a simple client-server app to test the majority judgment voting system.
+Android client app allowing to take part in elections generated from the Major server.
 
-## Architecture
+## Project Structure
 
-The project is comprised of a mobile client and a server. Many clients can connect to a same server, sending their votes through a very simple REST API.
+The gradle build is implemented with Kotlin DSL
 
-I want to warn potential users about the fact that security properties are absolutely not taken into consideration. Using this tool, it is possible to rig the election and vote several times or abuse some API calls. The code does not scale either, for example because of the use of a memory database instead of something like PostgreSQL (there is a typeclass so that a real DB can be added easily though).
+The app is designed with MVVM architecture, using a repository with retrofit for the api management, a Room Database and Shared Preferences.
 
-## Server usage
+Dependency injection implemented with Hilt.
 
-Use `stack build` in `major-server` to compile. Run the executable with `--help` to get more information.
+**Warning** The app currently uses HTTP instead of HTTPS.
 
-## Client usage
+## Usage
 
-Every voter opens the Android app, enters the IP and the port. He registers, votes, then waits for the results.
+On first opening, register via the "No account? Register here" text under the login button.
 
-**NOTE**: The server does not handle TLS, and the Android application sends HTTPS requests. This means that both are not compatible as is. You will need to setup a reverse proxy on the server running the back-end, so that the content of the packets is not disclosed publicly **and** manual certificate management is not needed (with such web servers as Caddy).
+Then, you'll gain access to the platform with elections you can take part in.

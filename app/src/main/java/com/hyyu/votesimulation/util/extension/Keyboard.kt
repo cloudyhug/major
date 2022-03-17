@@ -29,6 +29,15 @@ fun showImeKeyboard(context: Context, view: View) {
 }
 
 /**
+ * Displays the keyboard
+ */
+@Utils
+fun showImeKeyboardWithFocusOnView(context: Context, view: View) {
+    val imm = getSoftKeyboardWithFocusOnView(context, view)
+    imm?.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT)
+}
+
+/**
  * Hides the keyboard
  *
  * @param binder: select your layout's root view and get its windowtoken
