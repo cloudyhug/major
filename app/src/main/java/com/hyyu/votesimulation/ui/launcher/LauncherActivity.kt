@@ -53,6 +53,7 @@ class LauncherActivity : AppCompatActivity() {
 
         binding.btnSend.setOnClickListener {
             it.bounce {
+                hideImeKeyboard(this, binding.root.windowToken)
                 clearErrorsOnInputs()
 
                 val login = binding.editTiLogin.value
@@ -141,6 +142,7 @@ class LauncherActivity : AppCompatActivity() {
                 is DataState.Error -> {
                     binding.btnSend.revertAnimation()
                     if (registerDialog?.showsDialog == true) {
+                        registerDialog?.revertLoadingButton()
                         displayErrorOnSnackbar(registerDialog?.getRootLayout()!!, dataState.exception.message)
                     } else {
                         displayErrorOnSnackbar(binding.root, dataState.exception.message)
@@ -170,24 +172,7 @@ class LauncherActivity : AppCompatActivity() {
     }
 
     private fun setupImeKeyboardParams() {
-/*
-        binding.editTiLogin.setOnFocusChangeListener { v, isFocused ->
-
-            if (isFocused)
-                focusedInput = v
-            else
-                hideImeKeyboard(this, binding.root.windowToken)
-        }
-
-        binding.editTiPassword.setOnFocusChangeListener { v, isFocused ->
-            if (isFocused)
-                focusedInput = v
-            else
-                hideImeKeyboard(this, binding.root.windowToken)
-        }
-*/
-
-        binding.editTiPassword.setOnEditorActionListener { _, id, event ->
+        binding.editTiPassword.setOnEditorActionListener { _, id, _ ->
             if (id == EditorInfo.IME_ACTION_DONE) {
                 hideImeKeyboard(this, binding.root.windowToken)
                 clearErrorsOnInputs()

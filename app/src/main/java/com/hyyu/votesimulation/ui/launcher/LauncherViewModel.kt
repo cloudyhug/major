@@ -8,9 +8,11 @@ import com.hyyu.votesimulation.repository.MainRepository
 import com.hyyu.votesimulation.util.state.DataState
 import com.hyyu.votesimulation.util.extension.isValidLogin
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -43,8 +45,8 @@ class LauncherViewModel
     fun setStateEvent(event: LauncherStateEvent) {
         viewModelScope.launch {
             when (event) {
-                is LauncherStateEvent.ConnectEvent -> logInToUserAccount()
-                is LauncherStateEvent.RegisterEvent -> registerNewUserAccount()
+                is LauncherStateEvent.ConnectEvent -> withContext(Dispatchers.IO) { logInToUserAccount() }
+                is LauncherStateEvent.RegisterEvent -> withContext(Dispatchers.IO) { registerNewUserAccount() }
             }
         }
     }
@@ -52,7 +54,7 @@ class LauncherViewModel
     private suspend fun logInToUserAccount() {
         mainRepository.logInToUserAccount(credentialsBody)
             .onEach { dataState ->
-                _connectionDataState.value = dataState
+                _connectionDataState.postValue(dataState)
             }
             .launchIn(viewModelScope)
     }

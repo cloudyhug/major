@@ -1,17 +1,17 @@
 package com.hyyu.votesimulation.network
 
-import com.hyyu.votesimulation.network.body.BallotObjectBody
 import com.hyyu.votesimulation.network.body.BallotShardObjectBody
 import com.hyyu.votesimulation.network.body.CredentialsObjectBody
 import com.hyyu.votesimulation.network.response.*
-import com.hyyu.votesimulation.ui.elections.ElectionInfo
 import retrofit2.Call
+import retrofit2.Response
 import retrofit2.http.*
 
 interface MajorApi {
 
     companion object Road {
-        const val BASE_URL = "http:/192.168.1.17:8080"
+        // const val BASE_URL = "http:/192.168.1.17:8080"
+        const val BASE_URL = "http:/10.2.32.72:8080"
 
         const val CONNECT = "/connect"
         const val REGISTER = "/register"
@@ -26,12 +26,12 @@ interface MajorApi {
     @POST(CONNECT)
     suspend fun connect(
         @Body credentials: CredentialsObjectBody
-    ): Call<ConnectionObjectResponse>
+    ): Response<ConnectionObjectResponse>
 
     @POST(REGISTER)
     suspend fun register(
         @Body credentials: CredentialsObjectBody
-    )
+    ): Response<Unit>
 
     @GET(REFRESH_TOKEN)
     suspend fun refreshToken(

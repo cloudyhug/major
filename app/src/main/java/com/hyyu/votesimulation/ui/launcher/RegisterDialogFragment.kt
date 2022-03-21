@@ -2,6 +2,7 @@ package com.hyyu.votesimulation.ui.launcher
 
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.util.TypedValue
 import android.view.*
 import androidx.fragment.app.DialogFragment
@@ -63,6 +64,7 @@ class RegisterDialogFragment : DialogFragment() {
 
         binding.btnSend.setOnClickListener {
             it.bounce {
+                hideImeKeyboard(requireActivity(), binding.root.windowToken)
                 clearErrorsOnInputs()
 
                 val vm = (requireActivity() as LauncherActivity).viewModel

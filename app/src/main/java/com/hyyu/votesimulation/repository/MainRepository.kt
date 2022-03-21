@@ -42,41 +42,45 @@ constructor(
         }
     }
 
-    suspend fun logInToUserAccount(body: CredentialsObjectBody): Flow<DataState<ConnectionObjectResponse>> = withContext(Dispatchers.IO) {
-        flow {
-            emit(DataState.Loading)
-            delay(1000)
-            try {
-                body.clientId = sessionPrefs.deviceName!!
-                Log.v(TAG, "${MajorApi.BASE_URL}${MajorApi.CONNECT}: body: $body")
-                val connectionResponse =
-                    majorApi.connect(
-                        body
-                    ).apply {
-                        sessionPrefs.accessToken = accessToken
-                        sessionPrefs.refreshToken = refreshToken
-                        emit(DataState.Success(this))
+    suspend fun logInToUserAccount(body: CredentialsObjectBody): Flow<DataState<ConnectionObjectResponse>> = flow {
+        emit(DataState.Loading)
+        delay(1000)
+        try {
+            body.clientId = sessionPrefs.deviceName!!
+            Log.v(TAG, "${MajorApi.BASE_URL}${MajorApi.CONNECT}: body: $body")
+            val connectionResponse =
+                majorApi.connect(
+                    body
+                )
+                    .apply {
+                        if (isSuccessful) {
+                            body()?.let {
+                                sessionPrefs.accessToken = it.accessToken
+                                sessionPrefs.refreshToken = it.refreshToken
+                                emit(DataState.Success(it))
+                            } ?: throw Exception("Request body was null")
+                        } else throw Exception(headers()["message"])
                     }
-            } catch (e: Exception) {
-                Log.e(TAG, "error: ${e.message}")
-                emit(DataState.Error(e))
-            }
+        } catch (e: Exception) {
+            Log.e(TAG, "error: ${e.message}")
+            emit(DataState.Error(e))
         }
     }
 
-    suspend fun registerNewUserAccount(body: CredentialsObjectBody): Flow<DataState<Unit>> = withContext(Dispatchers.IO) {
-        flow {
-            emit(DataState.Loading)
-            delay(1000)
-            try {
-                body.clientId = sessionPrefs.deviceName!!
-                Log.v(TAG, "${MajorApi.BASE_URL}${MajorApi.REGISTER}: body: $body")
-                val registerResponse = majorApi.register(body)
-                    .apply { emit(DataState.Success(Unit)) }
-            } catch (e: Exception) {
-                Log.e(TAG, "error: ${e.message}")
-                emit(DataState.Error(e))
-            }
+    suspend fun registerNewUserAccount(body: CredentialsObjectBody): Flow<DataState<Unit>> = flow {
+        emit(DataState.Loading)
+        delay(1000)
+        try {
+            body.clientId = sessionPrefs.deviceName!!
+            Log.v(TAG, "${MajorApi.BASE_URL}${MajorApi.REGISTER}: body: $body")
+            val registerResponse = majorApi.register(body)
+                .apply {
+                    if (isSuccessful) emit(DataState.Success(Unit))
+                    else throw Exception(headers()["message"])
+                }
+        } catch (e: Exception) {
+            Log.e(TAG, "error: ${e.message}")
+            emit(DataState.Error(e))
         }
     }
 
