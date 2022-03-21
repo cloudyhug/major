@@ -19,7 +19,7 @@ class ElectionsActivity : AppCompatActivity() {
     val TAG: String = ElectionsActivity::class.java.simpleName
   }
 
-  // val viewModel: ElectionsViewModel by viewModels()
+   val viewModel: ElectionsViewModel by viewModels()
 
   private lateinit var binding: ActivityElectionsBinding
 
