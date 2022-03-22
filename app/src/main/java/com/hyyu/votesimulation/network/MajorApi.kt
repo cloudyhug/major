@@ -39,31 +39,25 @@ interface MajorApi {
     ): Call<String>
 
     @GET(ELECTIONS)
-    suspend fun elections(
-        @Header("accessToken") accessToken: String
-    ): Call<List<ElectionInfoObjectResponse>>
+    suspend fun elections(): Call<List<ElectionInfoObjectResponse>>
 
     @GET(ELECTION_INFO)
     suspend fun electionInfo(
-        @Header("accessToken") accessToken: String,
         @Path("eID") electionID: Int
     ): Call<List<CandidateObjectResponse>>
 
     @GET(ELECTION_RESULTS)
     suspend fun electionResults(
-        @Header("accessToken") accessToken: String,
         @Path("eID") electionID: Int
     ): Call<List<ElectionResultsShardObjectResponse>>
 
     @GET(MY_VOTE)
     suspend fun myVote(
-        @Header("accessToken") accessToken: String,
         @Path("eID") electionID: Int
     ): Call<List<BallotShardObjectResponse>>
 
     @POST(VOTE)
     suspend fun vote(
-        @Header("accessToken") accessToken: String,
         @Path("eID") electionID: Int,
         @Body ballot: List<BallotShardObjectBody>
     )

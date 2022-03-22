@@ -2,6 +2,8 @@ package com.hyyu.votesimulation.di
 
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.hyyu.votesimulation.model.Rating
+import com.hyyu.votesimulation.model.RatingAdapter
 import com.hyyu.votesimulation.network.MajorApi
 import com.hyyu.votesimulation.prefs.Session
 import dagger.Module
@@ -27,6 +29,7 @@ object NetworkModule {
     fun provideGsonBuilder(): Gson {
         return GsonBuilder()
             .excludeFieldsWithoutExposeAnnotation()
+            .registerTypeAdapter(Rating::class.java, RatingAdapter())
             .create()
     }
 
@@ -42,7 +45,7 @@ object NetworkModule {
                 var request = it.request()
                 val newBuilder = request.newBuilder()
 
-                newBuilder.addHeader("Authorization", sessionPrefs.accessToken ?: "")
+                newBuilder.addHeader("accessToken", sessionPrefs.accessToken ?: "")
                 request = newBuilder.build()
                 it.proceed(request)
             }
