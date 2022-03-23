@@ -122,23 +122,7 @@ data APIError =
   | UserAlreadyVoted
   | UserIsNotAdmin
   | InvalidRequestInput
-
-instance Show APIError where
-  show UnacceptableCredentials = "unacceptable credentials"
-  show InvalidSession = "invalid session"
-  show InvalidCredentials = "invalid credentials"
-  show UserAlreadyRegistered = "user already registered"
-  show ClientAlreadyRegistered = "client already registered"
-  show InvalidRefreshToken = "invalid refresh token"
-  show InvalidAccessToken = "invalid access token"
-  show ElectionNotFound = "election not found"
-  show ElectionStillRunning = "election still running"
-  show ElectionNotRunning = "election not running"
-  show NoVoteCast = "no vote was cast on this election"
-  show UserDidNotVote = "user did not vote"
-  show UserAlreadyVoted = "user has already voted"
-  show UserIsNotAdmin = "user is not admin"
-  show InvalidRequestInput = "invalid request input"
+  deriving Show
 
 type AppM a = ExceptT APIError IO a
 
