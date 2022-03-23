@@ -89,7 +89,7 @@ Content-Type: application/json
 
 ###
 
-GET http://localhost:8000/refreshToken HTTP/1.1
+POST http://localhost:8000/refreshToken HTTP/1.1
 Content-Type: text/plain
 
 toto
@@ -100,7 +100,7 @@ toto
 
 # for next one, put as body the refresh token given above in the successful call to connect
 
-GET http://localhost:8000/refreshToken HTTP/1.1
+POST http://localhost:8000/refreshToken HTTP/1.1
 Content-Type: text/plain
 
 

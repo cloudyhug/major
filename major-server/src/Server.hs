@@ -29,9 +29,9 @@ launch db port = scotty port $ do
     credentials <- fromExcept "could not read credentials from body" . J.eitherDecode <$> body
     liftIO . runExceptT $ register db credentials
   
-  get "/refreshToken" $ buildResponse text =<< do
+  post "/refreshToken" $ buildResponse json =<< do
     token <- RefreshToken . BS.unpack <$> body
-    liftIO . runExceptT $ T.pack . rawAccessToken <$> renewToken db token
+    liftIO . runExceptT $ RefreshToken . rawAccessToken <$> renewToken db token
   
   get "/elections" $ buildResponse json =<< do
     token <- AccessToken . T.unpack .
