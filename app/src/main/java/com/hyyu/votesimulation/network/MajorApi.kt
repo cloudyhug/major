@@ -40,7 +40,7 @@ interface MajorApi {
     ): Call<String>
 
     @GET(ELECTIONS)
-    suspend fun elections(): Call<List<ElectionInfoObjectResponse>>
+    suspend fun elections(): Response<List<ElectionInfoObjectResponse>>
 
     @GET(ELECTION_INFO)
     suspend fun electionInfo(
