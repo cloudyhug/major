@@ -1,10 +1,10 @@
-package com.hyyu.votesimulation.ui.launcher
+package com.hyyu.votesimulation.ui.launcher.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.*
 import com.hyyu.votesimulation.network.body.CredentialsObjectBody
 import com.hyyu.votesimulation.network.response.ConnectionObjectResponse
 import com.hyyu.votesimulation.repository.MainRepository
+import com.hyyu.votesimulation.ui.launcher.state.LauncherStateEvent
 import com.hyyu.votesimulation.util.state.DataState
 import com.hyyu.votesimulation.util.extension.isValidLogin
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -82,9 +82,4 @@ class LauncherViewModel
     fun createCredentials(login: String, password: String) = CredentialsObjectBody(login, password, mainRepository.deviceName!!)
     fun getLocalAccessToken() = mainRepository.accessToken
 
-}
-
-sealed class LauncherStateEvent {
-    object ConnectEvent : LauncherStateEvent()
-    object RegisterEvent : LauncherStateEvent()
 }

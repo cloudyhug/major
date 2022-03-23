@@ -1,14 +1,9 @@
 package com.hyyu.votesimulation.ui.launcher
 
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
-import android.util.Log
-import android.view.KeyEvent
 import android.view.View
-import android.view.WindowManager
 import android.view.inputmethod.EditorInfo
-import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentTransaction
@@ -16,14 +11,14 @@ import androidx.fragment.app.FragmentTransaction.TRANSIT_FRAGMENT_MATCH_ACTIVITY
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputLayout
 import com.hyyu.votesimulation.databinding.ActivityLauncherBinding
-import com.hyyu.votesimulation.network.body.CredentialsObjectBody
 import com.hyyu.votesimulation.network.response.ConnectionObjectResponse
+import com.hyyu.votesimulation.ui.launcher.state.LauncherStateEvent
+import com.hyyu.votesimulation.ui.launcher.viewmodel.LauncherViewModel
 import com.hyyu.votesimulation.ui.main.MainActivity
 import com.hyyu.votesimulation.util.const.AnimationConst
 import com.hyyu.votesimulation.util.state.DataState
 import com.hyyu.votesimulation.util.extension.bounce
 import com.hyyu.votesimulation.util.extension.hideImeKeyboard
-import com.hyyu.votesimulation.util.extension.showImeKeyboard
 import com.hyyu.votesimulation.util.extension.value
 import com.hyyu.votesimulation.util.handler.SimpleHandler
 import dagger.hilt.android.AndroidEntryPoint

@@ -2,13 +2,14 @@ package com.hyyu.votesimulation.ui.launcher
 
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.util.TypedValue
 import android.view.*
 import androidx.fragment.app.DialogFragment
 import com.google.android.material.textfield.TextInputLayout
 import com.hyyu.votesimulation.R
 import com.hyyu.votesimulation.databinding.DialogRegisterBinding
+import com.hyyu.votesimulation.ui.launcher.state.LauncherStateEvent
+import com.hyyu.votesimulation.ui.launcher.viewmodel.LauncherViewModel
 import com.hyyu.votesimulation.util.const.AnimationConst
 import com.hyyu.votesimulation.util.extension.*
 import com.hyyu.votesimulation.util.handler.SimpleHandler

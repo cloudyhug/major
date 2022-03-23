@@ -6,7 +6,7 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import com.hyyu.votesimulation.databinding.ActivityLauncherBinding
 import com.hyyu.votesimulation.model.Blog
-import com.hyyu.votesimulation.ui.launcher.LauncherViewModel
+import com.hyyu.votesimulation.ui.launcher.viewmodel.LauncherViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
