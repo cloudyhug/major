@@ -1,4 +1,4 @@
-package com.hyyu.votesimulation.ui.main
+package com.hyyu.votesimulation.ui.main.viewmodel
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
