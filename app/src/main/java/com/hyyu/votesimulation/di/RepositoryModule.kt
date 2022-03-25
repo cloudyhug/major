@@ -3,7 +3,7 @@ package com.hyyu.votesimulation.di
 import com.hyyu.votesimulation.database.BlogDao
 import com.hyyu.votesimulation.database.CacheMapper
 import com.hyyu.votesimulation.network.MajorApi
-import com.hyyu.votesimulation.network.BlogMapper
+import com.hyyu.votesimulation.network.ElectionMapper
 import com.hyyu.votesimulation.prefs.Session
 import com.hyyu.votesimulation.repository.MainRepository
 import dagger.Module
@@ -29,9 +29,9 @@ object RepositoryModule {
         majorApi: MajorApi,
         sessionPrefs: Session,
         cacheMapper: CacheMapper,
-        blogMapper: BlogMapper
+        electionMapper: ElectionMapper
     ): MainRepository {
-        return MainRepository(blogDao, sessionPrefs, majorApi, cacheMapper, blogMapper)
+        return MainRepository(blogDao, sessionPrefs, majorApi, cacheMapper, electionMapper)
     }
 
 }

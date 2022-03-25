@@ -1,8 +1,12 @@
 package com.hyyu.votesimulation.ui.elections
 
 import androidx.lifecycle.*
+import com.hyyu.votesimulation.model.Election
 import com.hyyu.votesimulation.repository.MainRepository
+import com.hyyu.votesimulation.util.state.DataState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 @HiltViewModel
@@ -16,10 +20,10 @@ class ElectionsViewModel
     val TAG: String = ElectionsViewModel::class.java.simpleName
   }
 
-//  /* LiveData associated to user's registering */
-//  private val _registerDataState: MutableLiveData<DataState<Unit>> = MutableLiveData()
-//  val registerDataState: LiveData<DataState<Unit>>
-//    get() = _registerDataState
+  /* LiveData associated to info about elections */
+  private val _electionsDataState: MutableLiveData<DataState<List<Election>>> = MutableLiveData()
+  val electionsDataState: LiveData<DataState<List<Election>>>
+    get() = _electionsDataState
 
 //  lateinit var credentialsBody: CredentialsObjectBody
 
@@ -36,13 +40,13 @@ class ElectionsViewModel
 //    }
 //  }
 
-//  private suspend fun logInToUserAccount() {
-//    mainRepository.logInToUserAccount(credentialsBody)
-//      .onEach { dataState ->
-//        _connectionDataState.postValue(dataState)
-//      }
-//      .launchIn(viewModelScope)
-//  }
+  private suspend fun getElections() {
+    mainRepository.getElections()
+      .onEach { dataState ->
+        _electionsDataState.postValue(dataState)
+      }
+      .launchIn(viewModelScope)
+  }
 }
 
 //sealed class LauncherStateEvent {
