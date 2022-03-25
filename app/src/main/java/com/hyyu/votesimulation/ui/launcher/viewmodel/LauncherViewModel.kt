@@ -62,7 +62,7 @@ class LauncherViewModel
     private suspend fun registerNewUserAccount() {
         mainRepository.registerNewUserAccount(credentialsBody)
             .onEach { dataState ->
-                _registerDataState.value = dataState
+                _registerDataState.postValue(dataState)
             }
             .launchIn(viewModelScope)
     }
