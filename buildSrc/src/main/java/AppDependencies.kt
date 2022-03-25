@@ -32,13 +32,20 @@ object AppDependencies {
     private const val preference = "${Dependencies.preference}:${Versions.preference}"
 
     /* Android UI */
-    private const val activityKtx = "${Dependencies.activtyKtx}:${Versions.activityKtx}"
+    private const val activityKtx = "${Dependencies.activityKtx}:${Versions.activityKtx}"
     private const val appcompat = "${Dependencies.appcompat}:${Versions.appcompat}"
     private const val constraintLayout = "${Dependencies.constraintLayout}:${Versions.constraintLayout}"
     private const val coreKtx = "${Dependencies.coreKtx}:${Versions.coreKtx}"
     private const val fragmentKtx = "${Dependencies.fragmentKtx}:${Versions.fragmentKtx}"
     private const val material = "${Dependencies.material}:${Versions.material}"
     private const val swipeRefreshLayout = "${Dependencies.swipeRefreshLayout}:${Versions.swiperefreshLayout}"
+
+    /* Jetpack Compose */
+    private const val composeActivity = "${Dependencies.composeActivity}:${Versions.composeActivity}"
+    private const val composeAnimation = "${Dependencies.composeAnimation}:${Versions.composeAnimation}"
+    private const val composeMaterial = "${Dependencies.composeMaterial}:${Versions.composeMaterial}"
+    private const val composeTooling = "${Dependencies.composeTooling}:${Versions.composeTooling}"
+    private const val composeViewModel = "${Dependencies.composeViewModel}:${Versions.composeViewModel}"
 
     /* CircularProgressButton */
     private const val circularProgressButton = "${Dependencies.circularProgressButton}:${Versions.circularProgressButton}"
@@ -53,9 +60,10 @@ object AppDependencies {
     private const val glideCompiler = "${Dependencies.glideCompiler}:${Versions.glideCompiler}"
 
     /* Tests */
-    private const val jUnit = "${Dependencies.jUnit}:${Versions.jUnit}"
     private const val extJUnit = "${Dependencies.extJUnit}:${Versions.extJunit}"
     private const val espressoCore = "${Dependencies.espressoCore}:${Versions.espressoCore}"
+    private const val jUnit = "${Dependencies.jUnit}:${Versions.jUnit}"
+    private const val jUnitCompose = "${Dependencies.jUnitCompose}:${Versions.jUnitCompose}"
 
     /* Hilt Testing */
     private const val hiltTestAndroid = "${Dependencies.hiltTestAndroid}:${Versions.hiltTestAndroid}"
@@ -66,6 +74,11 @@ object AppDependencies {
         add(activityKtx)
         add(appcompat)
         add(circularProgressButton)
+        add(composeActivity)
+        add(composeAnimation)
+        add(composeMaterial)
+        add(composeTooling)
+        add(composeViewModel)
         add(constraintLayout)
         add(coreKtx)
         add(fragmentKtx)
@@ -99,6 +112,7 @@ object AppDependencies {
         add(espressoCore)
         add(extJUnit)
         add(hiltTestAndroid)
+        add(jUnitCompose)
     }
 
     val testLibraries = arrayListOf<String>().apply {

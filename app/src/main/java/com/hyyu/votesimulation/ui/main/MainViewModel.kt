@@ -1,10 +1,12 @@
 package com.hyyu.votesimulation.ui.main
 
+import android.util.Log
 import androidx.lifecycle.*
 import com.hyyu.votesimulation.repository.MainRepository
 import com.hyyu.votesimulation.util.state.DataState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -26,11 +28,25 @@ class MainViewModel
     val initDataState: LiveData<DataState<Unit>>
         get() = _initDataState
 
+    private var _electionsList = arrayListOf(
+        "Election 0",
+        "Election 1",
+        "Election 2",
+        "Election 3",
+        "Election 4",
+        "Election 5"
+    )
+
+    val electionsList: List<String>
+        get() = _electionsList
+
     fun launchInitialCalls() {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                _initDataState.postValue(DataState.Success(Unit))
+                Log.v(TAG, "Start Mock")
+                mockRefreshTokenCall()
 /*
+                // TODO: Uncomment once getting the new server executor
                 mainRepository.refreshAccessToken()
                     .onEach {
                         _initDataState.postValue(it)
@@ -39,6 +55,12 @@ class MainViewModel
 */
             }
         }
+    }
+
+    // TODO: Remove once getting the new server executor
+    private suspend fun mockRefreshTokenCall() {
+        delay(1000)
+        _initDataState.postValue(DataState.Success(Unit))
     }
 
 }
