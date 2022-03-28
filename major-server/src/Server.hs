@@ -31,7 +31,7 @@ launch db port = scotty port $ do
   
   post "/refreshToken" $ buildResponse json =<< do
     token <- RefreshToken . BS.unpack <$> body
-    liftIO . runExceptT $ RefreshToken . rawAccessToken <$> renewToken db token
+    liftIO . runExceptT $ AccessToken . rawAccessToken <$> renewToken db token
   
   get "/elections" $ buildResponse json =<< do
     token <- AccessToken . T.unpack .

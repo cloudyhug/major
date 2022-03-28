@@ -12,11 +12,11 @@ import Control.Monad.Trans.Except (ExceptT)
 newtype RefreshToken = RefreshToken String
   deriving (Eq, Show)
 
-instance ToJSON RefreshToken where
-  toJSON (RefreshToken rtok) = object ["refreshToken" .= rtok]
-
 newtype AccessToken = AccessToken String
   deriving (Eq, Ord, Show)
+
+instance ToJSON AccessToken where
+  toJSON (AccessToken atok) = object ["accessToken" .= atok]
 
 rawAccessToken :: AccessToken -> String
 rawAccessToken (AccessToken atok) = atok
