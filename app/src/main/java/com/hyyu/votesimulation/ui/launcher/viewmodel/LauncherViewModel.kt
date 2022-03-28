@@ -27,12 +27,13 @@ class LauncherViewModel
     }
 
     /* LiveData associated to user's registering */
-    private val _registerDataState: MutableLiveData<DataState<Unit>> = MutableLiveData()
-    val registerDataState: LiveData<DataState<Unit>>
+    private val _registerDataState: MutableLiveData<DataState<String>> = MutableLiveData()
+    val registerDataState: LiveData<DataState<String>>
         get() = _registerDataState
 
     /* LiveData associated to user's connection */
-    private val _connectionDataState: MutableLiveData<DataState<ConnectionObjectResponse>> = MutableLiveData()
+    private val _connectionDataState: MutableLiveData<DataState<ConnectionObjectResponse>> =
+        MutableLiveData()
     val connectionDataState: LiveData<DataState<ConnectionObjectResponse>>
         get() = _connectionDataState
 
@@ -45,8 +46,8 @@ class LauncherViewModel
     fun setStateEvent(event: LauncherStateEvent) {
         viewModelScope.launch {
             when (event) {
-                is LauncherStateEvent.ConnectEvent -> withContext(Dispatchers.IO) { logInToUserAccount() }
-                is LauncherStateEvent.RegisterEvent -> withContext(Dispatchers.IO) { registerNewUserAccount() }
+                is LauncherStateEvent.ConnectEvent -> logInToUserAccount()
+                is LauncherStateEvent.RegisterEvent -> registerNewUserAccount()
             }
         }
     }
@@ -62,6 +63,8 @@ class LauncherViewModel
     private suspend fun registerNewUserAccount() {
         mainRepository.registerNewUserAccount(credentialsBody)
             .onEach { dataState ->
+                if (dataState is DataState.Success)
+                    logInToUserAccount()
                 _registerDataState.postValue(dataState)
             }
             .launchIn(viewModelScope)
@@ -79,7 +82,9 @@ class LauncherViewModel
         }
     }
 
-    fun createCredentials(login: String, password: String) = CredentialsObjectBody(login, password, mainRepository.deviceName!!)
+    fun createCredentials(login: String, password: String) =
+        CredentialsObjectBody(login, password, mainRepository.deviceName!!)
+
     fun getLocalAccessToken() = mainRepository.accessToken
 
 }

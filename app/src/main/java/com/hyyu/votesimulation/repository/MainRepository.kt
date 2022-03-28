@@ -12,9 +12,11 @@ import com.hyyu.votesimulation.network.response.ConnectionObjectResponse
 import com.hyyu.votesimulation.network.response.ElectionInfoObjectResponse
 import com.hyyu.votesimulation.prefs.Session
 import com.hyyu.votesimulation.util.state.DataState
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 
 @Suppress("BlockingMethodInNonBlockingContext")
 class MainRepository
@@ -42,7 +44,7 @@ constructor(
         }
     }
 
-    suspend fun registerNewUserAccount(body: CredentialsObjectBody): Flow<DataState<Unit>> = flow {
+    suspend fun registerNewUserAccount(body: CredentialsObjectBody): Flow<DataState<String>> = flow {
         emit(DataState.Loading)
         delay(1000)
         try {
@@ -50,14 +52,14 @@ constructor(
             Log.v(TAG, "${MajorApi.BASE_URL}${MajorApi.REGISTER}: body: $body")
             majorApi.register(body)
                 .apply {
-                    if (isSuccessful) emit(DataState.Success(Unit))
+                    if (isSuccessful) emit(DataState.Success(body.login))
                     else throw Exception(headers()["message"])
                 }
         } catch (e: Exception) {
             Log.e(TAG, "error: ${e.message}")
             emit(DataState.Error(e))
         }
-    }
+    }.flowOn(Dispatchers.IO)
 
     suspend fun logInToUserAccount(body: CredentialsObjectBody): Flow<DataState<ConnectionObjectResponse>> = flow {
         emit(DataState.Loading)
@@ -79,7 +81,7 @@ constructor(
             Log.e(TAG, "error: ${e.message}")
             emit(DataState.Error(e))
         }
-    }
+    }.flowOn(Dispatchers.IO)
 
     suspend fun refreshAccessToken(): Flow<DataState<Unit>> = flow {
         try {
@@ -99,7 +101,7 @@ constructor(
             Log.e(TAG, "error: ${e.message}")
             emit(DataState.Error(e))
         }
-    }
+    }.flowOn(Dispatchers.IO)
 
     suspend fun getElections(): Flow<DataState<List<Election>>> = flow {
         emit(DataState.Loading)
@@ -119,6 +121,6 @@ constructor(
             Log.e(TAG, "error: ${e.message}")
             emit(DataState.Error(e))
         }
-    }
+    }.flowOn(Dispatchers.IO)
 
 }

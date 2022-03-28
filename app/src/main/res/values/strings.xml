@@ -12,6 +12,7 @@
     <string name="activity_launcher_pass_hint">Password</string>
     <string name="activity_launcher_send">@string/log_in_label</string>
     <string name="activity_launcher_no_account">No account? Register here</string>
+    <string name="activity_launcher_user_registered">Welcome, %1$s</string>
 
     <!-- Register dialog strings -->
     <string name="dialog_register_title">Register your account</string>

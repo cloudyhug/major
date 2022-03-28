@@ -4,12 +4,14 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.EditorInfo
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.FragmentTransaction.TRANSIT_FRAGMENT_MATCH_ACTIVITY_OPEN
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputLayout
+import com.hyyu.votesimulation.R
 import com.hyyu.votesimulation.databinding.ActivityLauncherBinding
 import com.hyyu.votesimulation.network.response.ConnectionObjectResponse
 import com.hyyu.votesimulation.ui.launcher.state.LauncherStateEvent
@@ -148,11 +150,6 @@ class LauncherActivity : AppCompatActivity() {
 
         viewModel.registerDataState.observe(this) { dataState ->
             when (dataState) {
-                is DataState.Success<Unit> -> {
-                    SimpleHandler.postDelayed({
-                        viewModel.setStateEvent(LauncherStateEvent.ConnectEvent)
-                    }, AnimationConst.HANDLER_DELAY_SHORT)
-                }
                 is DataState.Loading -> {
                     registerDialog?.animLoadingButton()
                 }
@@ -162,6 +159,7 @@ class LauncherActivity : AppCompatActivity() {
                         displayErrorOnSnackbar(registerDialog!!.getRootLayout(), dataState.exception.message)
                     }
                 }
+                is DataState.Success -> Toast.makeText(this, getString(R.string.activity_launcher_user_registered, dataState.data), Toast.LENGTH_SHORT).show()
             }
         }
     }

@@ -11,13 +11,13 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.hyyu.votesimulation.ui.main.state.MainStateEvent
+import com.hyyu.votesimulation.ui.main.viewmodel.MainViewModel
 import com.hyyu.votesimulation.ui.theme.MajorTheme
-import com.hyyu.votesimulation.ui.theme.Orange700
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -31,14 +31,12 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel.launchInitialCalls()
+        viewModel.setStateEvent(MainStateEvent.InitialNetworkCalls)
 
         setupObservers()
     }
 
     private fun initActivity() {
-        Log.v(TAG, "Mock succeeded")
-        // TODO: Network calls have been made, begin MainActivity startup here
         setContent {
             MajorTheme {
                 ActivityScaffold()

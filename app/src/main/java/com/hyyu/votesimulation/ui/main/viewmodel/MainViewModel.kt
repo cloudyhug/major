@@ -3,10 +3,13 @@ package com.hyyu.votesimulation.ui.main.viewmodel
 import android.util.Log
 import androidx.lifecycle.*
 import com.hyyu.votesimulation.repository.MainRepository
+import com.hyyu.votesimulation.ui.main.state.MainStateEvent
 import com.hyyu.votesimulation.util.state.DataState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -38,27 +41,21 @@ class MainViewModel
     val electionsList: List<String>
         get() = _electionsList
 
-    fun launchInitialCalls() {
+    fun setStateEvent(event: MainStateEvent) {
         viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                Log.v(TAG, "Start Mock")
-                mockRefreshTokenCall()
-/*
-                // TODO: Uncomment once getting the new server executor
-                mainRepository.refreshAccessToken()
-                    .onEach {
-                        _initDataState.postValue(it)
-                    }
-                    .launchIn(viewModelScope)
-*/
+            when (event) {
+                is MainStateEvent.InitialNetworkCalls -> launchInitialCalls()
             }
         }
     }
 
-    // TODO: Remove once getting the new server executor
-    private suspend fun mockRefreshTokenCall() {
-        delay(1000)
-        _initDataState.postValue(DataState.Success(Unit))
+    private suspend fun launchInitialCalls() {
+        mainRepository.refreshAccessToken()
+            .onEach {
+
+                _initDataState.postValue(it)
+            }
+            .launchIn(viewModelScope)
     }
 
 }
