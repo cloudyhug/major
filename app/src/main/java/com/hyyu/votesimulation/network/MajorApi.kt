@@ -37,7 +37,7 @@ interface MajorApi {
     @POST(REFRESH_TOKEN)
     suspend fun refreshAccessToken(
         @Body token: String
-    ): Response<String>
+    ): Response<RefreshAccessTokenObjectResponse>
 
     @GET(ELECTIONS)
     suspend fun elections(): Response<List<ElectionInfoObjectResponse>>
