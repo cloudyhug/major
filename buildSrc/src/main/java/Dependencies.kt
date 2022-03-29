@@ -5,6 +5,7 @@ object Dependencies {
     const val composeActivity = "androidx.activity:activity-compose"
     const val composeAnimation = "androidx.compose.animation:animation"
     const val composeMaterial = "androidx.compose.material:material"
+    const val composeRuntimeLiveData = "androidx.compose.runtime:runtime-livedata"
     const val composeTooling = "androidx.compose.ui:ui-tooling"
     const val composeViewModel = "androidx.lifecycle:lifecycle-viewmodel-compose"
     const val constraintLayout = "androidx.constraintlayout:constraintlayout"

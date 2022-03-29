@@ -13,6 +13,7 @@ object Versions {
     const val composeActivity = "1.4.0"
     const val composeAnimation = "1.1.1"
     const val composeMaterial = "1.1.1"
+    const val composeRuntimeLiveData = "1.1.1"
     const val composeTooling = "1.1.1"
     const val composeViewModel = "2.4.1"
     const val constraintLayout = "2.1.3"

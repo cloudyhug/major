@@ -44,6 +44,7 @@ object AppDependencies {
     private const val composeActivity = "${Dependencies.composeActivity}:${Versions.composeActivity}"
     private const val composeAnimation = "${Dependencies.composeAnimation}:${Versions.composeAnimation}"
     private const val composeMaterial = "${Dependencies.composeMaterial}:${Versions.composeMaterial}"
+    private const val composeRuntimeLiveData = "${Dependencies.composeRuntimeLiveData}:${Versions.composeRuntimeLiveData}"
     private const val composeTooling = "${Dependencies.composeTooling}:${Versions.composeTooling}"
     private const val composeViewModel = "${Dependencies.composeViewModel}:${Versions.composeViewModel}"
 
@@ -77,6 +78,7 @@ object AppDependencies {
         add(composeActivity)
         add(composeAnimation)
         add(composeMaterial)
+        add(composeRuntimeLiveData)
         add(composeTooling)
         add(composeViewModel)
         add(constraintLayout)
