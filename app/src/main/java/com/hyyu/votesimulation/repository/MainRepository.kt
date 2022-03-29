@@ -9,7 +9,6 @@ import com.hyyu.votesimulation.network.MajorApi
 import com.hyyu.votesimulation.network.ElectionMapper
 import com.hyyu.votesimulation.network.body.CredentialsObjectBody
 import com.hyyu.votesimulation.network.response.ConnectionObjectResponse
-import com.hyyu.votesimulation.network.response.ElectionInfoObjectResponse
 import com.hyyu.votesimulation.prefs.Session
 import com.hyyu.votesimulation.util.state.DataState
 import kotlinx.coroutines.Dispatchers
@@ -85,12 +84,13 @@ constructor(
 
     suspend fun refreshAccessToken(): Flow<DataState<Unit>> = flow {
         try {
+            Log.v(TAG, "${MajorApi.BASE_URL}${MajorApi.REFRESH_TOKEN}: body: ${sessionPrefs.refreshToken}")
             sessionPrefs.refreshToken?.let {
                 majorApi.refreshAccessToken(it)
                     .apply {
                         if (isSuccessful) {
-                            body()?.let { token ->
-                                sessionPrefs.accessToken = token
+                            body()?.let { response ->
+                                sessionPrefs.accessToken = response.accessToken
                                 emit(DataState.Success(Unit))
                             } ?: throw Exception("Request body was null")
                         }
@@ -108,14 +108,13 @@ constructor(
         delay(1000)
         try {
             Log.v(TAG, "${MajorApi.BASE_URL}${MajorApi.ELECTIONS}")
-            val electionsResponse = majorApi.elections()
+            majorApi.elections()
                 .apply {
                     if (isSuccessful) {
                         body()?.let {
                             emit(DataState.Success(electionMapper.mapFromEntityList(it)))
                         } ?: throw Exception("Response body was null")
-                    }
-                    else throw Exception(headers()["message"])
+                    } else throw Exception(headers()["message"])
                 }
         } catch (e: Exception) {
             Log.e(TAG, "error: ${e.message}")
