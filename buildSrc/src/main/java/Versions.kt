@@ -22,7 +22,7 @@ object Versions {
     const val fragmentKtx = "1.4.1"
     const val glide = "4.13.0"
     const val glideCompiler = "4.13.0"
-    const val gradle = "7.3.0-alpha03"
+    const val gradle = "7.2.2"
     const val hilt = "2.41"
     const val hiltAndroid = "2.38.1"
     const val hiltCompilerAndroid = "1.0.0-alpha03"
