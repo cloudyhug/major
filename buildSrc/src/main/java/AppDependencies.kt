@@ -15,7 +15,7 @@ object AppDependencies {
     /* Hilt */
     private const val hiltAndroid = "${Dependencies.hiltAndroid}:${Versions.hiltAndroid}"
     private const val hiltCompiler = "${Dependencies.hiltCompilerDagger}:${Versions.hiltCompilerDagger}"
-    private const val hiltCompilerAndroid = "${Dependencies.hiltCompilerAndroid}:${Versions.hiltCompilerAndroid}"
+    private const val hiltNavigation = "${Dependencies.hiltNavigation}:${Versions.hiltNavigation}"
 
     /* Retrofit */
     private const val retrofit = "${Dependencies.retrofit}:${Versions.retrofit}"
@@ -44,6 +44,7 @@ object AppDependencies {
     private const val composeActivity = "${Dependencies.composeActivity}:${Versions.composeActivity}"
     private const val composeAnimation = "${Dependencies.composeAnimation}:${Versions.composeAnimation}"
     private const val composeMaterial = "${Dependencies.composeMaterial}:${Versions.composeMaterial}"
+    private const val composeNavigation = "${Dependencies.composeNavigation}:${Versions.composeNavigation}"
     private const val composeTooling = "${Dependencies.composeTooling}:${Versions.composeTooling}"
     private const val composeViewModel = "${Dependencies.composeViewModel}:${Versions.composeViewModel}"
 
@@ -68,7 +69,6 @@ object AppDependencies {
     /* Hilt Testing */
     private const val hiltTestAndroid = "${Dependencies.hiltTestAndroid}:${Versions.hiltTestAndroid}"
     private const val hiltTestCompilerAndroid = "${Dependencies.hiltTestCompilerAndroid}:${Versions.hiltTestCompilerAndroid}"
-    private const val hiltTestCompilerAndroidX = "${Dependencies.hiltTestCompilerAndroidX}:${Versions.hiltTestCompilerAndroidX}"
 
     val appLibraries = arrayListOf<String>().apply {
         add(activityKtx)
@@ -77,6 +77,7 @@ object AppDependencies {
         add(composeActivity)
         add(composeAnimation)
         add(composeMaterial)
+        add(composeNavigation)
         add(composeTooling)
         add(composeViewModel)
         add(constraintLayout)
@@ -84,6 +85,7 @@ object AppDependencies {
         add(fragmentKtx)
         add(glide)
         add(hiltAndroid)
+        add(hiltNavigation)
         add(kotlinCoroutinesAndroid)
         add(kotlinCoroutinesCore)
         add(kotlinStdLib)
@@ -104,7 +106,6 @@ object AppDependencies {
     val kaptLibraries = arrayListOf<String>().apply {
         add(glideCompiler)
         add(hiltCompiler)
-        add(hiltCompilerAndroid)
         add(roomCompiler)
     }
 
@@ -122,7 +123,6 @@ object AppDependencies {
 
     val kaptAndroidTestLibraries = arrayListOf<String>().apply {
         add(hiltTestCompilerAndroid)
-        add(hiltTestCompilerAndroidX)
     }
 
 }

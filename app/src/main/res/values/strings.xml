@@ -8,8 +8,8 @@
 
     <!-- Launcher Activity strings -->
     <string name="activity_launcher_major">@string/app_name</string>
-    <string name="activity_launcher_login_hint">Login</string>
-    <string name="activity_launcher_pass_hint">Password</string>
+    <string name="activity_launcher_login_label">Login</string>
+    <string name="activity_launcher_password_label">Password</string>
     <string name="activity_launcher_send">@string/log_in_label</string>
     <string name="activity_launcher_no_account">No account? Register here</string>
 

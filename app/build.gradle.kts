@@ -33,6 +33,9 @@ android {
         viewBinding = true
         compose = true
     }
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.3.0"
+    }
 }
 
 dependencies {
@@ -41,4 +44,8 @@ dependencies {
     testImplementation(AppDependencies.testLibraries)
     androidTestImplementation(AppDependencies.androidTestLibraries)
     kaptAndroidTest(AppDependencies.kaptAndroidTestLibraries)
+}
+
+kapt {
+    correctErrorTypes = true
 }

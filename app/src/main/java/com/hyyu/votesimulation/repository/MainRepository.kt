@@ -2,10 +2,7 @@ package com.hyyu.votesimulation.repository
 
 import android.os.Build
 import android.util.Log
-import com.hyyu.votesimulation.database.BlogDao
-import com.hyyu.votesimulation.database.CacheMapper
 import com.hyyu.votesimulation.network.MajorApi
-import com.hyyu.votesimulation.network.BlogMapper
 import com.hyyu.votesimulation.network.body.CredentialsObjectBody
 import com.hyyu.votesimulation.network.response.ConnectionObjectResponse
 import com.hyyu.votesimulation.prefs.Session
@@ -17,11 +14,8 @@ import kotlinx.coroutines.flow.flow
 @Suppress("BlockingMethodInNonBlockingContext")
 class MainRepository
 constructor(
-    private val blogDao: BlogDao,
     private val sessionPrefs: Session,
-    private val majorApi: MajorApi,
-    private val cacheMapper: CacheMapper,
-    private val blogMapper: BlogMapper
+    private val majorApi: MajorApi
 ) {
 
     companion object {

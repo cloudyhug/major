@@ -1,19 +1,14 @@
 package com.hyyu.votesimulation.ui
 
 import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
-import android.widget.Toast
-import androidx.activity.viewModels
-import com.hyyu.votesimulation.databinding.ActivityLauncherBinding
-import com.hyyu.votesimulation.model.Blog
-import com.hyyu.votesimulation.ui.launcher.viewmodel.LauncherViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity(), BlogAdapter.BlogItemListener {
+class MainActivity : AppCompatActivity() {
 
+    /*
     private lateinit var binding: ActivityLauncherBinding
 
     private val viewModel: LauncherViewModel by viewModels()
@@ -87,5 +82,5 @@ class MainActivity : AppCompatActivity(), BlogAdapter.BlogItemListener {
         }
         */
     }
-
+*/
 }

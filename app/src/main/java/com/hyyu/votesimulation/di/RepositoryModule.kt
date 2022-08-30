@@ -1,9 +1,6 @@
 package com.hyyu.votesimulation.di
 
-import com.hyyu.votesimulation.database.BlogDao
-import com.hyyu.votesimulation.database.CacheMapper
 import com.hyyu.votesimulation.network.MajorApi
-import com.hyyu.votesimulation.network.BlogMapper
 import com.hyyu.votesimulation.prefs.Session
 import com.hyyu.votesimulation.repository.MainRepository
 import dagger.Module
@@ -25,13 +22,10 @@ object RepositoryModule {
     @Singleton
     @Provides
     fun provideMainRepository(
-        blogDao: BlogDao,
         majorApi: MajorApi,
-        sessionPrefs: Session,
-        cacheMapper: CacheMapper,
-        blogMapper: BlogMapper
+        sessionPrefs: Session
     ): MainRepository {
-        return MainRepository(blogDao, sessionPrefs, majorApi, cacheMapper, blogMapper)
+        return MainRepository(sessionPrefs, majorApi)
     }
 
 }

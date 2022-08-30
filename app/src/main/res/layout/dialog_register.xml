@@ -75,7 +75,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:gravity="center"
-        android:hint="@string/activity_launcher_login_hint"
         app:boxStrokeColor="@color/outlined_edit_text_selector"
         app:layout_constraintBottom_toTopOf="@id/layout_ti_password"
         app:layout_constraintEnd_toEndOf="parent"
@@ -110,7 +109,6 @@
             android:id="@+id/edit_ti_password"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:hint="@string/activity_launcher_pass_hint"
             android:importantForAutofill="no"
             android:inputType="textPassword"
             android:letterSpacing="0.15" />
