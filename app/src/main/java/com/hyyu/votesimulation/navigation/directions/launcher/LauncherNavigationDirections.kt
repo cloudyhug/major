@@ -8,7 +8,7 @@ object LauncherNavigationDirections {
 
     const val navigationRoute = "nav_launcher"
 
-    val launcher = object : NavigationCommand {
+    val login = object : NavigationCommand {
         override var arguments = emptyMap<String, String>()
         override val destination = Screen.Launch.route
     }
@@ -16,11 +16,6 @@ object LauncherNavigationDirections {
     val signup = object : NavigationCommand {
         override var arguments = emptyMap<String, String>()
         override val destination = Screen.Signup.route
-    }
-
-    val login = object : NavigationCommand {
-        override var arguments = emptyMap<String, String>()
-        override val destination = Screen.Login.route
     }
 
 }
