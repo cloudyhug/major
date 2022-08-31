@@ -33,4 +33,8 @@ object MajorDimens {
     val caption = 12.sp
     val overline = 10.sp
 
+    /* Values for Launcher composable */
+
+    const val launcherTextFieldWidthFraction = 0.65f
+
 }

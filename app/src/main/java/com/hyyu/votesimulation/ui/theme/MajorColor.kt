@@ -8,4 +8,5 @@ object MajorColor {
     val Orange700 = Color(0xFFF57C00)
 
     val BlueGrey200 = Color(0xFFB0BEC5)
+    val BlueGrey300 = Color(0xFF78909C)
 }
