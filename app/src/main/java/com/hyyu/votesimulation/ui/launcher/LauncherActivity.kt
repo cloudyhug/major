@@ -10,6 +10,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
+import com.hyyu.votesimulation.model.launcher.LauncherType
 import com.hyyu.votesimulation.navigation.directions.launcher.LauncherNavigationDirections
 import com.hyyu.votesimulation.navigation.handleNavigation
 import com.hyyu.votesimulation.navigation.navigators.AppNavigator
@@ -51,15 +52,22 @@ class LauncherActivity : AppCompatActivity() {
         ) {
             navigation(
                 route = LauncherNavigationDirections.navigationRoute,
-                startDestination = LauncherNavigationDirections.launcher.destination
+                startDestination = LauncherNavigationDirections.login.destination
             ) {
                 // Launcher
-                composable(route = LauncherNavigationDirections.launcher.destination) {
-                    Launcher(hiltViewModel())
+                composable(route = LauncherNavigationDirections.login.destination) {
+                    Launcher(
+                        hiltViewModel(),
+                        LauncherType.LOGIN
+                    )
                 }
 
                 // Signup
                 composable(route = LauncherNavigationDirections.signup.destination) {
+                    Launcher(
+                        hiltViewModel(),
+                        LauncherType.LOGIN
+                    )
                 }
             }
         }
