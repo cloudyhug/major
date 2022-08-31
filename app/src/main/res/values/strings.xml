@@ -17,4 +17,8 @@
     <string name="dialog_register_title">Register your account</string>
     <string name="dialog_register_send">@string/sign_up_label</string>
 
+    <!-- Content descriptions -->
+    <string name="icon_cake_content_description">Cake Icon</string>
+    <string name="icon_visibility_content_description">Password visibility icon</string>
+
 </resources>
