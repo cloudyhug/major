@@ -16,12 +16,6 @@
         android:theme="@style/Theme.TestKts"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".ui.elections.ElectionsActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ui.main.MainActivity"
-            android:exported="false" />
-        <activity
             android:name=".ui.launcher.LauncherActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustResize">
