@@ -66,7 +66,7 @@ class LauncherActivity : AppCompatActivity() {
                 composable(route = LauncherNavigationDirections.signup.destination) {
                     Launcher(
                         hiltViewModel(),
-                        LauncherType.LOGIN
+                        LauncherType.SIGNUP
                     )
                 }
             }
