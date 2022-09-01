@@ -1,9 +1,10 @@
 package com.hyyu.votesimulation.ui.launcher.compose
 
+import android.util.Log
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -14,8 +15,10 @@ import com.hyyu.votesimulation.ui.launcher.LauncherViewModel
 import com.hyyu.votesimulation.R.drawable
 import com.hyyu.votesimulation.R.string
 import com.hyyu.votesimulation.model.launcher.LauncherType
+import com.hyyu.votesimulation.ui.common.compose.ButtonWithLoader
 import com.hyyu.votesimulation.ui.common.compose.CredentialsFormBlock
 import com.hyyu.votesimulation.ui.launcher.event.LauncherEvent
+import com.hyyu.votesimulation.ui.launcher.state.LauncherState
 import com.hyyu.votesimulation.ui.theme.MajorColor
 import com.hyyu.votesimulation.ui.theme.MajorDimens
 import com.hyyu.votesimulation.ui.theme.MajorFonts
@@ -25,48 +28,77 @@ fun Launcher(
     viewModel: LauncherViewModel,
     type: LauncherType
 ) {
+    val state by viewModel.uiState.collectAsState()
+
+    BackHandler(enabled = true) {
+        viewModel.handleEvent(LauncherEvent.Back)
+    }
+
+    when {
+        state.isAuthenticated -> {
+            // TODO: go to next screen
+        }
+        state.isFailure -> {
+            // TODO: display Snackbar or Toast
+        }
+    }
+
+    state.credentials?.let {
+        Log.v("Launcher/credentialsCheck", "credentials not null, launching login")
+        viewModel.handleEvent(LauncherEvent.Login(it.login, it.password))
+    }
+
+    LauncherContent(
+        viewModel = viewModel,
+        type = type,
+        state = state
+    )
+}
+
+@Composable
+private fun LauncherContent(
+    viewModel: LauncherViewModel,
+    type: LauncherType,
+    state: LauncherState
+) {
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally,
-
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         var login by remember { mutableStateOf("") }
         var password by remember { mutableStateOf("") }
 
         TitleBlock()
-        Spacer(modifier = Modifier.height(MajorDimens.quad))
+        Spacer(modifier = Modifier.height(MajorDimens.Padding.quadruple))
         CredentialsFormBlock(
             login,
             { login = it },
             password,
             { password = it }
         )
-        Spacer(modifier = Modifier.height(MajorDimens.quad))
-        Button(
-            modifier = Modifier.fillMaxWidth(MajorDimens.launcherTextFieldWidthFraction),
-            shape = RoundedCornerShape(50),
-            onClick = {
-                viewModel.handleEvent(LauncherEvent.Login(login, password))
-            }
-        ) {
-            Row(modifier = Modifier.padding(MajorDimens.normal)) {
-                Text(
-                    text = stringResource(
-                        id = if (type == LauncherType.SIGNUP) string.activity_launcher_signup
-                        else string.activity_launcher_send
-                    ).uppercase(),
-                    style = MajorFonts.buttonText
+
+        Spacer(modifier = Modifier.height(MajorDimens.Padding.quadruple))
+        ButtonWithLoader(
+            modifier = Modifier
+                .fillMaxWidth(MajorDimens.TextField.WIDTH_FRACTION_LAUNCHER),
+            isLoading = state.isLoading,
+            title = stringResource(
+                id = if (type == LauncherType.LOGIN) string.activity_launcher_send
+                else string.activity_launcher_signup
+            ).uppercase(),
+            onClickAction = {
+                viewModel.handleEvent(
+                    if (type == LauncherType.LOGIN) LauncherEvent.Login(login, password)
+                    else LauncherEvent.Signup(login, password)
                 )
             }
-        }
-        Spacer(modifier = Modifier.height(MajorDimens.double))
-        Text(
-            modifier = Modifier.clickable { viewModel.handleEvent(LauncherEvent.GoToSignup) },
-            text = stringResource(id = string.activity_launcher_no_account),
-            style = MajorFonts.buttonText,
-            color = MajorColor.Orange500,
         )
+
+        if (type == LauncherType.LOGIN) {
+            Spacer(modifier = Modifier.height(MajorDimens.Padding.normal))
+            SignupBlock { viewModel.handleEvent(LauncherEvent.GoToSignup) }
+        }
     }
 }
 
@@ -77,11 +109,23 @@ private fun TitleBlock() {
             painter = painterResource(id = drawable.ic_logo),
             contentDescription = stringResource(string.icon_cake_content_description)
         )
-        Spacer(modifier = Modifier.height(MajorDimens.normal))
+        Spacer(modifier = Modifier.height(MajorDimens.Padding.normal))
         Text(
             text = stringResource(id = string.app_name),
             style = MajorFonts.appTitle,
             color = MajorColor.Orange500
         )
     }
+}
+
+@Composable
+private fun SignupBlock(
+    onClick: () -> Unit
+) {
+    Text(
+        modifier = Modifier.clickable { onClick.invoke() },
+        text = stringResource(id = string.activity_launcher_no_account),
+        style = MajorFonts.buttonText,
+        color = MajorColor.Orange500,
+    )
 }
