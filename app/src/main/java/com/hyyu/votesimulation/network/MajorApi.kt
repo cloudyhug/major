@@ -10,9 +10,7 @@ import retrofit2.http.*
 interface MajorApi {
 
     companion object Road {
-        // const val BASE_URL = "http:/192.168.1.17:8080"
-        // const val BASE_URL = "http:/10.2.32.72:8080"
-        const val BASE_URL = "http://192.168.202.90:8080"
+        const val BASE_URL = "http://10.2.32.43:8080"
 
         const val CONNECT = "/connect"
         const val REGISTER = "/register"
