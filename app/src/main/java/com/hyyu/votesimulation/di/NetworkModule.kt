@@ -6,6 +6,7 @@ import com.hyyu.votesimulation.model.Rating
 import com.hyyu.votesimulation.model.RatingAdapter
 import com.hyyu.votesimulation.network.MajorApi
 import com.hyyu.votesimulation.prefs.Session
+import com.hyyu.votesimulation.util.const.CommonConst.RETROFIT_TIMEOUT
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -22,8 +23,6 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
 
-    const val TIMEOUT = 10L
-
     @Singleton
     @Provides
     fun provideGsonBuilder(): Gson {
@@ -38,9 +37,9 @@ object NetworkModule {
     fun provideRetrofit(sessionPrefs: Session, gson: Gson): Retrofit.Builder {
         val loggingInterceptor = HttpLoggingInterceptor()
         val clientBuilder = OkHttpClient.Builder().apply {
-            connectTimeout(TIMEOUT, TimeUnit.SECONDS)
-            writeTimeout(TIMEOUT, TimeUnit.SECONDS)
-            readTimeout(TIMEOUT, TimeUnit.SECONDS)
+            connectTimeout(RETROFIT_TIMEOUT, TimeUnit.SECONDS)
+            writeTimeout(RETROFIT_TIMEOUT, TimeUnit.SECONDS)
+            readTimeout(RETROFIT_TIMEOUT, TimeUnit.SECONDS)
             addNetworkInterceptor {
                 var request = it.request()
                 val newBuilder = request.newBuilder()
