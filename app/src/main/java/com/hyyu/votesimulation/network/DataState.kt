@@ -1,4 +1,4 @@
-package com.hyyu.votesimulation.util.state
+package com.hyyu.votesimulation.network
 
 sealed class DataState<out R> {
     data class Success<out T>(val data: T) : DataState<T>()
