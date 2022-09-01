@@ -2,6 +2,7 @@ package com.hyyu.votesimulation.network.body
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
+import com.hyyu.votesimulation.util.const.CommonConst.EMPTY_STRING
 
 data class CredentialsObjectBody (
     @SerializedName("login")
@@ -14,5 +15,5 @@ data class CredentialsObjectBody (
 
     @SerializedName("clientID")
     @Expose
-    var clientId: String
+    var clientId: String = EMPTY_STRING
 )
