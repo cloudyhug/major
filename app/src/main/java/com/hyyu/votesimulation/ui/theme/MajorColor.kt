@@ -9,4 +9,6 @@ object MajorColor {
 
     val BlueGrey200 = Color(0xFFB0BEC5)
     val BlueGrey300 = Color(0xFF78909C)
+
+    val White = Color(0xFFFAFAFA)
 }

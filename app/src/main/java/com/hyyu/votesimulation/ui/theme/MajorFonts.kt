@@ -19,32 +19,32 @@ object MajorFonts {
     val appTitle = TextStyle(
         fontFamily = CeraPro,
         fontWeight = FontWeight.Medium,
-        fontSize = MajorDimens.h5
+        fontSize = MajorDimens.TextSize.h5
     )
 
     val formLabel = TextStyle(
         fontFamily = CeraPro,
         fontWeight = FontWeight.Normal,
-        fontSize = MajorDimens.regular1
+        fontSize = MajorDimens.TextSize.regular1
     )
 
     val formText = TextStyle(
         fontFamily = CeraPro,
         fontWeight = FontWeight.Normal,
-        fontSize = MajorDimens.regular1
+        fontSize = MajorDimens.TextSize.regular1
     )
 
     val passwordText = TextStyle(
         fontFamily = CeraPro,
         fontWeight = FontWeight.Normal,
-        fontSize = MajorDimens.regular1,
+        fontSize = MajorDimens.TextSize.regular1,
         letterSpacing = 4.sp
     )
 
     val buttonText = TextStyle(
         fontFamily = CeraPro,
         fontWeight = FontWeight.Medium,
-        fontSize = MajorDimens.regular1
+        fontSize = MajorDimens.TextSize.regular1
     )
 
 }
