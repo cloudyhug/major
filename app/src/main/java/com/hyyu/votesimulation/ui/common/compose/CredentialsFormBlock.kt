@@ -27,7 +27,7 @@ fun CredentialsFormBlock(
     var passwordVisibility: Boolean by remember { mutableStateOf(false) }
 
     OutlinedTextField(
-        modifier = Modifier.fillMaxWidth(MajorDimens.launcherTextFieldWidthFraction),
+        modifier = Modifier.fillMaxWidth(MajorDimens.TextField.WIDTH_FRACTION_LAUNCHER),
         value = login,
         onValueChange = onLoginChange,
         textStyle = MajorFonts.formText,
@@ -38,9 +38,9 @@ fun CredentialsFormBlock(
             )
         }
     )
-    Spacer(modifier = Modifier.height(MajorDimens.normal))
+    Spacer(modifier = Modifier.height(MajorDimens.Padding.normal))
     OutlinedTextField(
-        modifier = Modifier.fillMaxWidth(MajorDimens.launcherTextFieldWidthFraction),
+        modifier = Modifier.fillMaxWidth(MajorDimens.TextField.WIDTH_FRACTION_LAUNCHER),
         value = password,
         onValueChange = onPasswordChange,
         textStyle = if (passwordVisibility) MajorFonts.formText else MajorFonts.passwordText,
