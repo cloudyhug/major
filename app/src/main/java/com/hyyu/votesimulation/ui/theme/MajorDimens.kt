@@ -10,6 +10,7 @@ object MajorDimens {
     object Padding {
         val small = 4.dp
         val normal = 8.dp
+        val medium = 12.dp
         val double = 16.dp
         val quadruple = 32.dp
         val quintuple = 40.dp

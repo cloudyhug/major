@@ -47,4 +47,10 @@ object MajorFonts {
         fontSize = MajorDimens.TextSize.regular1
     )
 
+    val snackbarText = TextStyle(
+        fontFamily = CeraPro,
+        fontWeight = FontWeight.Normal,
+        fontSize = MajorDimens.TextSize.regular2
+    )
+
 }
