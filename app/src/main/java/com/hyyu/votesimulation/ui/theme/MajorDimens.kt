@@ -12,6 +12,8 @@ object MajorDimens {
         val normal = 8.dp
         val double = 16.dp
         val quadruple = 32.dp
+        val quintuple = 40.dp
+        val sixfold = 48.dp
     }
 
     /* Elevation dimens */
@@ -50,12 +52,17 @@ object MajorDimens {
         val circularProgressIndicatorStrokeWidth = 2.dp
     }
 
+    /* Values for clickable composables */
+
     object Clickable {
         val minSize = 48.dp
     }
 
-    /* Positionning dimens */
+    /* Values for Snackbars */
 
-    val centering = 48.dp
+    object Snackbar {
+        const val ICON_ROTATION = 180f
+        val iconSize = 20.dp
+    }
 
 }
