@@ -2,12 +2,12 @@ package com.hyyu.votesimulation.repository
 
 import android.os.Build
 import android.util.Log
+import com.hyyu.votesimulation.network.DataState
 import com.hyyu.votesimulation.network.MajorApi
 import com.hyyu.votesimulation.network.body.CredentialsObjectBody
 import com.hyyu.votesimulation.network.response.ConnectionObjectResponse
 import com.hyyu.votesimulation.prefs.Session
 import com.hyyu.votesimulation.util.const.CommonConst.LOADING_MINIMUM_DELAY
-import com.hyyu.votesimulation.util.state.DataState
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
