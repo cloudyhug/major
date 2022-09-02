@@ -24,14 +24,14 @@ fun ButtonWithLoader(
         modifier = modifier
             .defaultMinSize(minHeight = MajorDimens.ButtonWithLoader.size),
         shape = RoundedCornerShape(MajorDimens.ButtonWithLoader.CORNER_RADIUS),
-        onClick = { onClickAction?.invoke() }
+        onClick = { if (!isLoading) onClickAction?.invoke() }
     ) {
         if (isLoading) {
             CircularProgressIndicator(
                 modifier = Modifier
                     .size(MajorDimens.ButtonWithLoader.circularProgressIndicatorSize)
                     .padding(MajorDimens.Padding.normal),
-                color = MajorColor.White,
+                color = MajorColor.ButtonWithLoader.indicator,
                 strokeWidth = MajorDimens.ButtonWithLoader.circularProgressIndicatorStrokeWidth
             )
         } else {
@@ -39,6 +39,7 @@ fun ButtonWithLoader(
                 modifier = Modifier
                     .padding(MajorDimens.Padding.normal),
                 text = title,
+                color = MajorColor.ButtonWithLoader.text,
                 style = MajorFonts.buttonText
             )
         }
