@@ -1,6 +1,5 @@
 package com.hyyu.votesimulation.ui.launcher.compose
 
-import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -19,7 +18,6 @@ import com.hyyu.votesimulation.ui.common.compose.ButtonWithLoader
 import com.hyyu.votesimulation.ui.common.compose.CredentialsFormBlock
 import com.hyyu.votesimulation.ui.launcher.event.LauncherEvent
 import com.hyyu.votesimulation.ui.launcher.state.LauncherState
-import com.hyyu.votesimulation.ui.theme.MajorColor
 import com.hyyu.votesimulation.ui.theme.MajorDimens
 import com.hyyu.votesimulation.ui.theme.MajorFonts
 
@@ -29,11 +27,14 @@ fun Launcher(
     type: LauncherType
 ) {
     val state by viewModel.uiState.collectAsState()
-
     BackHandler(enabled = true) {
         viewModel.handleEvent(LauncherEvent.Back)
     }
-
+    LaunchedEffect(key1 = state.credentials != null) {
+        state.credentials?.let {
+            viewModel.handleEvent(LauncherEvent.Login(it.login, it.password))
+        }
+    }
     when {
         state.isAuthenticated -> {
             // TODO: go to next screen
@@ -42,12 +43,6 @@ fun Launcher(
             // TODO: display Snackbar or Toast
         }
     }
-
-    state.credentials?.let {
-        Log.v("Launcher/credentialsCheck", "credentials not null, launching login")
-        viewModel.handleEvent(LauncherEvent.Login(it.login, it.password))
-    }
-
     LauncherContent(
         viewModel = viewModel,
         type = type,
@@ -68,7 +63,6 @@ private fun LauncherContent(
     ) {
         var login by remember { mutableStateOf("") }
         var password by remember { mutableStateOf("") }
-
         TitleBlock()
         Spacer(modifier = Modifier.height(MajorDimens.Padding.quadruple))
         CredentialsFormBlock(
@@ -77,7 +71,6 @@ private fun LauncherContent(
             password,
             { password = it }
         )
-
         Spacer(modifier = Modifier.height(MajorDimens.Padding.quadruple))
         ButtonWithLoader(
             modifier = Modifier
@@ -94,7 +87,6 @@ private fun LauncherContent(
                 )
             }
         )
-
         if (type == LauncherType.LOGIN) {
             Spacer(modifier = Modifier.height(MajorDimens.Padding.normal))
             SignupBlock { viewModel.handleEvent(LauncherEvent.GoToSignup) }
@@ -113,7 +105,7 @@ private fun TitleBlock() {
         Text(
             text = stringResource(id = string.app_name),
             style = MajorFonts.appTitle,
-            color = MajorColor.Orange500
+            color = MaterialTheme.colors.primary
         )
     }
 }
@@ -122,10 +114,16 @@ private fun TitleBlock() {
 private fun SignupBlock(
     onClick: () -> Unit
 ) {
-    Text(
-        modifier = Modifier.clickable { onClick.invoke() },
-        text = stringResource(id = string.activity_launcher_no_account),
-        style = MajorFonts.buttonText,
-        color = MajorColor.Orange500,
-    )
+    Column(
+        modifier = Modifier
+            .defaultMinSize(minHeight = MajorDimens.Clickable.minSize)
+            .clickable { onClick.invoke() },
+        verticalArrangement = Arrangement.Center
+        ) {
+        Text(
+            text = stringResource(id = string.activity_launcher_no_account),
+            style = MajorFonts.buttonText,
+            color = MaterialTheme.colors.primary,
+        )
+    }
 }
