@@ -88,12 +88,13 @@ instance FromJSON Rating where
   parseJSON = withScientific "Rating" $
     pure . toEnum . fromRight (error "a rating cannot be a float") . floatingOrInteger
 
-newtype ElectionResults = ElectionResults [(String, Rating, Double)]
+data ElectionResults = ElectionResults String [(String, Rating, Double)]
   deriving Show
 
 instance ToJSON ElectionResults where
-  toJSON (ElectionResults results) = Array . V.fromList $ map f results
-    where f (name, rating, score) = object ["name" .= name, "rating" .= rating, "score" .= score]
+  toJSON (ElectionResults explanation results) =
+    object ["explanation" .= explanation, "results" .= (Array . V.fromList $ map f results)]
+      where f (name, rating, score) = object ["name" .= name, "rating" .= rating, "score" .= score]
 
 newtype Ballot = Ballot [(CandidateID, Rating)]
   deriving Show

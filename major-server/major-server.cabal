@@ -13,11 +13,7 @@ author:         Author name here
 maintainer:     example@example.com
 copyright:      2022 Author name here
 license:        BSD3
-license-file:   LICENSE
 build-type:     Simple
-extra-source-files:
-    README.md
-    ChangeLog.md
 
 source-repository head
   type: git
@@ -44,7 +40,6 @@ library
     , extra
     , http-types
     , optparse-applicative
-    , postgresql-simple
     , random >=1.2
     , random-shuffle
     , resource-pool
@@ -80,7 +75,6 @@ executable major-server-exe
     , http-types
     , major-server
     , optparse-applicative
-    , postgresql-simple
     , random >=1.2
     , random-shuffle
     , resource-pool
@@ -117,7 +111,6 @@ test-suite major-server-test
     , http-types
     , major-server
     , optparse-applicative
-    , postgresql-simple
     , random >=1.2
     , random-shuffle
     , resource-pool
