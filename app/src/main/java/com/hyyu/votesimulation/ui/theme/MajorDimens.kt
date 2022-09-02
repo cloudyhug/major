@@ -50,6 +50,10 @@ object MajorDimens {
         val circularProgressIndicatorStrokeWidth = 2.dp
     }
 
+    object Clickable {
+        val minSize = 48.dp
+    }
+
     /* Positionning dimens */
 
     val centering = 48.dp
