@@ -1,16 +1,16 @@
 package com.hyyu.votesimulation.ui.launcher
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hyyu.votesimulation.navigation.BackCommand
 import com.hyyu.votesimulation.navigation.directions.launcher.LauncherNavigationDirections
 import com.hyyu.votesimulation.navigation.navigators.AppNavigator
+import com.hyyu.votesimulation.network.DataState
 import com.hyyu.votesimulation.network.body.CredentialsObjectBody
 import com.hyyu.votesimulation.repository.MainRepository
 import com.hyyu.votesimulation.ui.launcher.event.LauncherEvent
 import com.hyyu.votesimulation.ui.launcher.event.LauncherEvent.*
 import com.hyyu.votesimulation.ui.launcher.state.LauncherState
-import com.hyyu.votesimulation.util.state.DataState
+import com.hyyu.votesimulation.util.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
@@ -21,7 +21,7 @@ import javax.inject.Inject
 class LauncherViewModel @Inject constructor(
     private val mainRepository: MainRepository,
     private val appNavigator: AppNavigator
-) : ViewModel() {
+) : BaseViewModel() {
 
     companion object {
         val TAG: String = LauncherViewModel::class.java.simpleName
