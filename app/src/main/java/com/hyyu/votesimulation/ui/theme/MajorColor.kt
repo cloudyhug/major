@@ -3,11 +3,11 @@ package com.hyyu.votesimulation.ui.theme
 import androidx.compose.ui.graphics.Color
 
 object MajorColor {
-    val Orange200 = Color(0xFFFFCC80)
-    val Orange500 = Color(0xFFFF9800)
-    val Orange700 = Color(0xFFF57C00)
-    val BlueGrey200 = Color(0xFFB0BEC5)
-    val BlueGrey300 = Color(0xFF78909C)
+    private val Orange200 = Color(0xFFFFCC80)
+    private val Orange500 = Color(0xFFFF9800)
+    private val Orange700 = Color(0xFFF57C00)
+    private val BlueGrey200 = Color(0xFFB0BEC5)
+    private val BlueGrey300 = Color(0xFF78909C)
     private val Red700 = Color(0xFFD32F2F)
     val White = Color(0xFFFAFAFA)
 
@@ -27,10 +27,17 @@ object MajorColor {
         val secondary = Orange200
     }
 
-    /* Error color */
+    /* Error colors */
 
     object SnackbarError {
         val background = Red700
+        val text = White
+    }
+
+    /* ButtonWithLoader colors */
+
+    object ButtonWithLoader {
+        val indicator = White
         val text = White
     }
 
