@@ -13,6 +13,7 @@
     <string name="activity_launcher_send">@string/log_in_label</string>
     <string name="activity_launcher_no_account">No account? Register here</string>
     <string name="activity_launcher_signup">Sign up</string>
+    <string name="launcher_register_success">User was signed up, proceeding to log in</string>
 
     <!-- Register dialog strings -->
     <string name="dialog_register_title">Register your account</string>
@@ -23,6 +24,7 @@
     <string name="icon_visibility_content_description">Password visibility icon</string>
 
     <!-- API Error strings -->
+    <string name="retrofit_error_timeout">There was a problem with the remote server, please try again later</string>
     <string name="register_error_credentials_are_not_valid">Your credentials are not valid.
         Please remove invalid characters</string>
     <string name="register_error_user_already_exists">Your device is already used. Please use
