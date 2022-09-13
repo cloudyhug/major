@@ -1,5 +1,6 @@
 package com.hyyu.votesimulation.util.base
 
+import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import com.hyyu.votesimulation.model.common.snackbar.MajorSnackbarData
 import com.hyyu.votesimulation.model.common.snackbar.SnackbarType
@@ -11,7 +12,10 @@ open class BaseViewModel : ViewModel() {
     private val _snackbarState = MutableStateFlow<MajorSnackbarData?>(null)
     val snackbarState: StateFlow<MajorSnackbarData?> = _snackbarState
 
-    protected fun showSnackBar(message: String, type: SnackbarType = ERROR) {
+    protected fun showSnackBar(
+        message: String,
+        type: SnackbarType = ERROR
+    ) {
         _snackbarState.value = MajorSnackbarData(message, type)
     }
 
