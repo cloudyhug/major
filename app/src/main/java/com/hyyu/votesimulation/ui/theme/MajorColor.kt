@@ -9,6 +9,7 @@ object MajorColor {
     private val BlueGrey200 = Color(0xFFB0BEC5)
     private val BlueGrey300 = Color(0xFF78909C)
     private val Red700 = Color(0xFFD32F2F)
+    private val Green700 = Color(0xFF4CAF50)
     val White = Color(0xFFFAFAFA)
 
     /* Light theme colors */
@@ -29,9 +30,15 @@ object MajorColor {
 
     /* Error colors */
 
-    object SnackbarError {
-        val background = Red700
-        val text = White
+    object SnackbarMessage {
+        object Error {
+            val background = Red700
+            val text = White
+        }
+        object Validation {
+            val background = Green700
+            val text = White
+        }
     }
 
     /* ButtonWithLoader colors */

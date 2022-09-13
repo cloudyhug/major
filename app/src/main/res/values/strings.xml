@@ -22,4 +22,10 @@
     <string name="icon_cake_content_description">Cake Icon</string>
     <string name="icon_visibility_content_description">Password visibility icon</string>
 
+    <!-- API Error strings -->
+    <string name="register_error_credentials_are_not_valid">Your credentials are not valid.
+        Please remove invalid characters</string>
+    <string name="register_error_user_already_exists">Your device is already used. Please use
+        your associated account or another device.</string>
+
 </resources>
