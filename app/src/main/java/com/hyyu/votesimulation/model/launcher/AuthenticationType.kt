@@ -1,5 +1,5 @@
 package com.hyyu.votesimulation.model.launcher
 
-enum class LauncherType {
+enum class AuthenticationType {
     LOGIN, SIGNUP
 }
